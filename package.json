@@ -21,22 +21,29 @@
   "homepage": "https://github.com/r2don/nest-http-interface#readme",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "husky install"
   },
   "devDependencies": {
+    "@nestjs/axios": "^2.0.0",
     "@nestjs/common": "^9.4.0",
     "@nestjs/core": "^9.4.0",
-    "@nestjs/axios": "^2.0.0",
     "axios": "^1.3.5",
     "eslint": "^8.37.0",
     "eslint-config-async": "^2.0.1",
     "eslint-config-prettier": "^8.8.0",
+    "eslint-config-standard-with-typescript": "^34.0.1",
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-prettier": "^4.2.1",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.2.1",
     "prettier": "^2.8.7",
     "reflect-metadata": "^0.1.13",
     "typescript": "^5.0.3",
     "vitest": "^0.29.8"
+  },
+  "lint-staged": {
+    "*.ts": "eslint --fix"
   },
   "keywords": [
     "nest",

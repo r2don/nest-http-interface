@@ -1,0 +1,24 @@
+env:
+  es2021: true
+  node: true
+extends:
+  - standard-with-typescript
+  - plugin:@typescript-eslint/recommended
+  - plugin:prettier/recommended
+overrides: [ ]
+parserOptions:
+  project: 'tsconfig.json'
+  ecmaVersion: latest
+  sourceType: module
+rules:
+  semi: [ 'error', 'always' ]
+  import/order: [
+    'error',
+    {
+      groups: [ 'builtin', 'external', [ 'parent', 'sibling' ], 'index' ],
+      alphabetize: {
+        order: 'asc',
+        caseInsensitive: true,
+      },
+    },
+  ]
