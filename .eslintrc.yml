@@ -6,24 +6,29 @@ extends:
   - plugin:@typescript-eslint/recommended
   - plugin:prettier/recommended
 overrides:
-  - files: [ 'vitest.config.ts', 'global.vitest.ts' ]
+  - files:
+      - vitest.config.ts
+      - global.vitest.ts
     parser: '@typescript-eslint/parser'
     parserOptions:
-      project: 'tsconfig.spec.json'
+      project: tsconfig.spec.json
 parserOptions:
-  project: 'tsconfig.json'
+  project: tsconfig.json
   ecmaVersion: latest
   sourceType: module
 rules:
-  semi: [ 'error', 'always' ]
-  import/order: [
-    'error',
-    {
-      groups: [ 'builtin', 'external', [ 'parent', 'sibling' ], 'index' ],
-      alphabetize: {
-        order: 'asc',
-        caseInsensitive: true,
-      },
-    },
-  ]
+  semi:
+    - error
+    - always
+  import/order:
+    - error
+    - groups:
+        - builtin
+        - external
+        - - parent
+          - sibling
+        - index
+      alphabetize:
+        order: asc
+        caseInsensitive: true
   '@typescript-eslint/no-extraneous-class': 0
