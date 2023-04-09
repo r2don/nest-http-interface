@@ -1,1 +1,1 @@
-export * from "./nest-http-interface.module";
+export * from "./http-interface.module";
