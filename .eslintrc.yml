@@ -5,7 +5,11 @@ extends:
   - standard-with-typescript
   - plugin:@typescript-eslint/recommended
   - plugin:prettier/recommended
-overrides: [ ]
+overrides:
+  - files: [ 'vitest.config.ts', 'global.vitest.ts' ]
+    parser: '@typescript-eslint/parser'
+    parserOptions:
+      project: 'tsconfig.spec.json'
 parserOptions:
   project: 'tsconfig.json'
   ecmaVersion: latest
