@@ -1,9 +1,15 @@
 import { MetadataScanner } from "@nestjs/core";
 import { beforeEach, describe, test, expect } from "vitest";
 import {
+  DeleteExchange,
   GetExchange,
+  HeadExchange,
   HttpInterface,
+  OptionsExchange,
+  PatchExchange,
   PathVariable,
+  PostExchange,
+  PutExchange,
   RequestParam,
 } from "./decorators";
 import { StubDiscoveryService } from "./fixture/stub-discovery.service";
@@ -23,6 +29,25 @@ describe("NodeFetchInjector", () => {
   beforeEach(() => {
     httpClient.clear();
     discoveryService.clear();
+  });
+
+  test("should not wrap method if there is no http interface decorator", async () => {
+    // given
+    class SampleClient {
+      @GetExchange("/api")
+      async request(): Promise<string> {
+        return "request";
+      }
+    }
+    const instance = discoveryService.addProvider(SampleClient);
+    nodeFetchInjector.onModuleInit();
+
+    // when
+    const actual = await instance.request();
+
+    // then
+    expect(actual).toBe("request");
+    expect(httpClient.requestInfo).toHaveLength(0);
   });
 
   test("should not wrap method if there is no http exchange", async () => {
@@ -160,5 +185,34 @@ describe("NodeFetchInjector", () => {
     expect(httpClient.requestInfo[0].url).toBe(
       "https://example.com/api?keyword=search&page=1&isActive=true"
     );
+  });
+
+  test.each([
+    ["GET", GetExchange],
+    ["POST", PostExchange],
+    ["PUT", PutExchange],
+    ["DELETE", DeleteExchange],
+    ["PATCH", PatchExchange],
+    ["HEAD", HeadExchange],
+    ["OPTIONS", OptionsExchange],
+  ])("should make the request using %s method", async (method, decorator) => {
+    // given
+    @HttpInterface()
+    class SampleClient {
+      @decorator("https://example.com/api")
+      async request(): Promise<string> {
+        return "request";
+      }
+    }
+    const instance = discoveryService.addProvider(SampleClient);
+    httpClient.addResponse({ status: "ok" });
+    nodeFetchInjector.onModuleInit();
+
+    // when
+    await instance.request();
+
+    // then
+    expect(httpClient.requestInfo).toHaveLength(1);
+    expect(httpClient.requestInfo[0].method).toBe(method);
   });
 });

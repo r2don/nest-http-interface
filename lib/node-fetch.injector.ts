@@ -26,45 +26,54 @@ export class NodeFetchInjector implements OnModuleInit {
 
     httpProviders.forEach((wrapper) => {
       const prototype = wrapper.metatype.prototype;
-      const baseUrl: string = Reflect.getMetadata(
+      const baseUrl: string | undefined = Reflect.getMetadata(
         HTTP_INTERFACE_METADATA,
         prototype
       );
-      const methodNames = this.metadataScanner.getAllMethodNames(prototype);
 
-      methodNames.forEach((methodName) => {
-        const getMetadata = this.makeMetadataGetter(prototype, methodName);
-        const httpExchangeMetadata = getMetadata<HttpExchangeMetadata>(
-          HTTP_EXCHANGE_METADATA
-        );
+      if (typeof baseUrl === "undefined") {
+        return;
+      }
 
-        if (typeof httpExchangeMetadata === "undefined") {
-          return;
-        }
-
-        const pathMetadata = getMetadata<PathVariableMetadata>(
-          PATH_VARIABLE_METADATA
-        );
-        const requestParamMetadata = getMetadata<RequestParamMetadata>(
-          REQUEST_PARAM_METADATA
-        );
-
-        wrapper.instance[methodName] = async (...args: any[]) => {
-          const urlBuilder = new URLBuilder(
-            baseUrl,
-            httpExchangeMetadata.url,
-            args,
-            {
-              pathParam: pathMetadata,
-              queryParam: requestParamMetadata,
-            }
+      this.metadataScanner
+        .getAllMethodNames(prototype)
+        .forEach((methodName) => {
+          const getMetadata = this.makeMetadataGetter(prototype, methodName);
+          const httpExchangeMetadata = getMetadata<HttpExchangeMetadata>(
+            HTTP_EXCHANGE_METADATA
           );
 
-          return await this.httpClient
-            .request(new Request(urlBuilder.build()))
-            .then(async (response) => await response.json());
-        };
-      });
+          if (typeof httpExchangeMetadata === "undefined") {
+            return;
+          }
+
+          const pathMetadata = getMetadata<PathVariableMetadata>(
+            PATH_VARIABLE_METADATA
+          );
+          const requestParamMetadata = getMetadata<RequestParamMetadata>(
+            REQUEST_PARAM_METADATA
+          );
+
+          wrapper.instance[methodName] = async (...args: any[]) => {
+            const urlBuilder = new URLBuilder(
+              baseUrl,
+              httpExchangeMetadata.url,
+              args,
+              {
+                pathParam: pathMetadata,
+                queryParam: requestParamMetadata,
+              }
+            );
+
+            return await this.httpClient
+              .request(
+                new Request(urlBuilder.build(), {
+                  method: httpExchangeMetadata.method,
+                })
+              )
+              .then(async (response) => await response.json());
+          };
+        });
     });
   }
 
