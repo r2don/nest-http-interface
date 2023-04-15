@@ -16,6 +16,10 @@ export class URLBuilder {
       queryParam?: RequestParamMetadata;
     } = {}
   ) {
+    if (this.host.length === 0) {
+      this.host = this.path;
+      this.path = "";
+    }
     this.#pathParams = this.toArray(metadata.pathParam);
     this.#queryParams = this.toArray(metadata.queryParam);
   }
@@ -59,7 +63,7 @@ export class URLBuilder {
       return this.host;
     }
 
-    if (this.isStartProtocol()) {
+    if (this.isStartWithProtocol()) {
       const [protocol, host] = this.host.split("://");
 
       return protocol + "://" + this.replaceSlash(`${host}/${this.path}`);
@@ -68,7 +72,7 @@ export class URLBuilder {
     return this.replaceSlash(`${this.host}/${this.path}`);
   }
 
-  private isStartProtocol(): boolean {
+  private isStartWithProtocol(): boolean {
     return this.host.match(/^https?:\/\//) != null;
   }
 

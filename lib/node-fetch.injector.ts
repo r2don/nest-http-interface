@@ -11,6 +11,7 @@ import {
   type RequestParamMetadata,
 } from "./decorators";
 import { HttpClient } from "./types/http-client.interface";
+import { URLBuilder } from "./utils/url-builder";
 
 @Injectable()
 export class NodeFetchInjector implements OnModuleInit {
@@ -44,51 +45,27 @@ export class NodeFetchInjector implements OnModuleInit {
         const pathMetadata = getMetadata<PathVariableMetadata>(
           PATH_VARIABLE_METADATA
         );
-
         const requestParamMetadata = getMetadata<RequestParamMetadata>(
           REQUEST_PARAM_METADATA
         );
 
         wrapper.instance[methodName] = async (...args: any[]) => {
-          const url = [...(pathMetadata?.entries() ?? [])].reduce(
-            (url, [index, value]) =>
-              url.replace(new RegExp(`{${value}}`, "g"), args[index]),
-            `${baseUrl}${httpExchangeMetadata.url}`
-          );
-          const searchParams = new URLSearchParams();
-          requestParamMetadata?.forEach((queryParamKey, paramIndex) => {
-            if (typeof queryParamKey === "undefined") {
-              this.toArray(args[paramIndex]).forEach(([key, value]) => {
-                searchParams.set(key, `${value?.toString() ?? ""}`);
-              });
-
-              return;
+          const urlBuilder = new URLBuilder(
+            baseUrl,
+            httpExchangeMetadata.url,
+            args,
+            {
+              pathParam: pathMetadata,
+              queryParam: requestParamMetadata,
             }
-            searchParams.set(queryParamKey, args[paramIndex]);
-          });
-
-          const request = new Request(
-            [url, searchParams.toString()].filter(Boolean).join("?")
           );
 
           return await this.httpClient
-            .request(request)
+            .request(new Request(urlBuilder.build()))
             .then(async (response) => await response.json());
         };
       });
     });
-  }
-
-  private toArray<T>(value: T): Array<[string, unknown]> {
-    if (value instanceof Map) {
-      return [...value.values()];
-    }
-
-    if (typeof value === "object" && value !== null) {
-      return Object.entries(value);
-    }
-
-    return [];
   }
 
   private getHttpProviders(): InstanceWrapper[] {
