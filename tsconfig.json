@@ -1,19 +1,12 @@
 {
-  "compilerOptions": {
-    "target": "ES6",
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "module": "commonjs",
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "strict": true,
-    "strictNullChecks": true,
-    "skipLibCheck": true
-  },
+  "extends": "./tsconfig.build.json",
   "include": [
-    "lib/**/*"
+    "lib/**/*",
+    "vitest.config.ts",
+    "global.vitest.ts",
+    "**/*.spec.ts"
   ],
   "exclude": [
-    "node_modules", "tests", "**/*.spec.js"
+    "node_modules"
   ]
 }
