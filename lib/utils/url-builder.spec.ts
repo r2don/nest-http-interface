@@ -4,6 +4,7 @@ import {
   type PathVariableMetadata,
   type RequestParamMetadata,
 } from "../decorators";
+import { MetadataMap } from "../types/metadata-map";
 
 describe("URLBuilder", () => {
   test("should build with base url", () => {
@@ -25,7 +26,7 @@ describe("URLBuilder", () => {
     const host = "https://example.com";
     const path = "api/users/{id}";
     const args = [1, 2];
-    const pathParam: PathVariableMetadata = new Map([[1, "id"]]);
+    const pathParam: PathVariableMetadata = new MetadataMap([[1, "id"]]);
     const urlBuilder = new URLBuilder(host, path, args, { pathParam });
 
     // when
@@ -40,7 +41,7 @@ describe("URLBuilder", () => {
     const host = "https://example.com";
     const path = "";
     const args = ["search"];
-    const queryParam: RequestParamMetadata = new Map([[0, "keyword"]]);
+    const queryParam: RequestParamMetadata = new MetadataMap([[0, "keyword"]]);
     const urlBuilder = new URLBuilder(host, path, args, { queryParam });
 
     // when
@@ -55,7 +56,7 @@ describe("URLBuilder", () => {
     const host = "https://example.com";
     const path = "api/user";
     const args = [{ keyword: "search" }];
-    const queryParam: RequestParamMetadata = new Map([[0, undefined]]);
+    const queryParam: RequestParamMetadata = new MetadataMap([[0, undefined]]);
     const urlBuilder = new URLBuilder(host, path, args, { queryParam });
 
     // when

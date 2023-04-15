@@ -1,6 +1,7 @@
 import { REQUEST_PARAM_METADATA } from "./constants";
+import { MetadataMap } from "../types/metadata-map";
 
-export type RequestParamMetadata = Map<number, string | undefined>;
+export type RequestParamMetadata = MetadataMap<number, string | undefined>;
 
 export function RequestParam(key?: string): ParameterDecorator {
   return (target, propertyKey, parameterIndex) => {
@@ -10,7 +11,7 @@ export function RequestParam(key?: string): ParameterDecorator {
 
     const metadata =
       Reflect.getMetadata(REQUEST_PARAM_METADATA, target, propertyKey) ??
-      new Map();
+      new MetadataMap();
 
     metadata.set(parameterIndex, key);
 

@@ -1,4 +1,5 @@
 import { REQUEST_BODY_METADATA } from "./constants";
+import { MetadataMap } from "../types/metadata-map";
 
 export type RequestBodyMetadata = Map<number, string | undefined>;
 
@@ -10,7 +11,7 @@ export function RequestBody(key?: string): ParameterDecorator {
 
     const metadata =
       Reflect.getMetadata(REQUEST_BODY_METADATA, target, propertyKey) ??
-      new Map();
+      new MetadataMap();
 
     metadata.set(parameterIndex, key);
 

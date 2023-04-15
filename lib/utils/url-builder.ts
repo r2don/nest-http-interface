@@ -1,3 +1,4 @@
+import { TupleArrayBuilder } from "./tuple-array-builder";
 import {
   type PathVariableMetadata,
   type RequestParamMetadata,
@@ -20,8 +21,8 @@ export class URLBuilder {
       this.host = this.path;
       this.path = "";
     }
-    this.#pathParams = this.toArray(metadata.pathParam);
-    this.#queryParams = this.toArray(metadata.queryParam);
+    this.#pathParams = metadata.pathParam?.toArray() ?? [];
+    this.#queryParams = metadata.queryParam?.toArray() ?? [];
   }
 
   build(): string {
@@ -48,7 +49,7 @@ export class URLBuilder {
         return;
       }
 
-      this.toArray<string, unknown>(this.args[paramIndex]).forEach(
+      TupleArrayBuilder.of<string, unknown>(this.args[paramIndex]).forEach(
         ([key, value]) => {
           searchParams.set(key, `${value?.toString() ?? ""}`);
         }
@@ -78,21 +79,5 @@ export class URLBuilder {
 
   private replaceSlash(url: string): string {
     return url.replace(/\/{2,}/g, "/");
-  }
-
-  private toArray<A, B>(value: unknown): Array<[A, B]> {
-    if (typeof value === "undefined") {
-      return [];
-    }
-
-    if (value instanceof Map) {
-      return [...value.entries()];
-    }
-
-    if (typeof value === "object" && value !== null) {
-      return Object.entries(value) as Array<[A, B]>;
-    }
-
-    return [];
   }
 }

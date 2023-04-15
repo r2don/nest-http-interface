@@ -1,6 +1,7 @@
 import { PATH_VARIABLE_METADATA } from "./constants";
+import { MetadataMap } from "../types/metadata-map";
 
-export type PathVariableMetadata = Map<number, string>;
+export type PathVariableMetadata = MetadataMap<number, string>;
 
 export function PathVariable(name: string): ParameterDecorator {
   return (target, propertyKey, parameterIndex) => {
@@ -10,7 +11,7 @@ export function PathVariable(name: string): ParameterDecorator {
 
     const metadata: PathVariableMetadata =
       Reflect.getMetadata(PATH_VARIABLE_METADATA, target, propertyKey) ??
-      new Map();
+      new MetadataMap();
 
     metadata.set(parameterIndex, name);
 
