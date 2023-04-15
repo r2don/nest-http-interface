@@ -8,12 +8,14 @@ import {
   PATH_VARIABLE_METADATA,
   type PathVariableMetadata,
 } from "./decorators";
+import { HttpClient } from "./types/http-client.interface";
 
 @Injectable()
 export class NodeFetchInjector implements OnModuleInit {
   constructor(
     private readonly metadataScanner: MetadataScanner,
-    private readonly discoveryService: DiscoveryService
+    private readonly discoveryService: DiscoveryService,
+    private readonly httpClient: HttpClient
   ) {}
 
   onModuleInit(): void {
@@ -43,14 +45,15 @@ export class NodeFetchInjector implements OnModuleInit {
 
         wrapper.instance[methodName] = async (...args: any[]) => {
           const url = [...(pathMetadata?.entries() ?? [])].reduce(
-            (url, [index, value]) => url.replace(value, args[index]),
+            (url, [index, value]) =>
+              url.replace(new RegExp(`{${value}}`, "g"), args[index]),
             `${baseUrl}${httpExchangeMetadata.url}`
           );
           const request = new Request(url);
 
-          return await fetch(request).then(
-            async (response) => await response.json()
-          );
+          return await this.httpClient
+            .request(request)
+            .then(async (response) => await response.json());
         };
       });
     });

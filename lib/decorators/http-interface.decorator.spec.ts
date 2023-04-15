@@ -9,7 +9,10 @@ describe("HttpInterface", () => {
     class TestService {}
 
     // when
-    const result = Reflect.getMetadata(HTTP_INTERFACE_METADATA, TestService);
+    const result = Reflect.getMetadata(
+      HTTP_INTERFACE_METADATA,
+      TestService.prototype
+    );
 
     // then
     expect(result).toBe("");
@@ -21,7 +24,10 @@ describe("HttpInterface", () => {
     class TestService {}
 
     // when
-    const result = Reflect.getMetadata(HTTP_INTERFACE_METADATA, TestService);
+    const result = Reflect.getMetadata(
+      HTTP_INTERFACE_METADATA,
+      TestService.prototype
+    );
 
     // then
     expect(result).toBe("/api/v1/sample");

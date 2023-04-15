@@ -14,7 +14,7 @@ export interface HttpExchangeMetadata {
   url: string;
 }
 
-type AsyncFunction = (...args: unknown[]) => Promise<unknown>;
+type AsyncFunction = (...args: any[]) => Promise<unknown>;
 
 export function HttpExchange(method: HttpMethod, url: string) {
   return function <P extends string>(
