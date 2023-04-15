@@ -7,6 +7,8 @@ import {
   type HttpExchangeMetadata,
   PATH_VARIABLE_METADATA,
   type PathVariableMetadata,
+  REQUEST_PARAM_METADATA,
+  type RequestParamMetadata,
 } from "./decorators";
 import { HttpClient } from "./types/http-client.interface";
 
@@ -43,13 +45,31 @@ export class NodeFetchInjector implements OnModuleInit {
           PATH_VARIABLE_METADATA
         );
 
+        const requestParamMetadata = getMetadata<RequestParamMetadata>(
+          REQUEST_PARAM_METADATA
+        );
+
         wrapper.instance[methodName] = async (...args: any[]) => {
           const url = [...(pathMetadata?.entries() ?? [])].reduce(
             (url, [index, value]) =>
               url.replace(new RegExp(`{${value}}`, "g"), args[index]),
             `${baseUrl}${httpExchangeMetadata.url}`
           );
-          const request = new Request(url);
+          const searchParams = new URLSearchParams();
+          requestParamMetadata?.forEach((queryParamKey, paramIndex) => {
+            if (typeof queryParamKey === "undefined") {
+              this.toArray(args[paramIndex]).forEach(([key, value]) => {
+                searchParams.set(key, `${value?.toString() ?? ""}`);
+              });
+
+              return;
+            }
+            searchParams.set(queryParamKey, args[paramIndex]);
+          });
+
+          const request = new Request(
+            [url, searchParams.toString()].filter(Boolean).join("?")
+          );
 
           return await this.httpClient
             .request(request)
@@ -57,6 +77,18 @@ export class NodeFetchInjector implements OnModuleInit {
         };
       });
     });
+  }
+
+  private toArray<T>(value: T): Array<[string, unknown]> {
+    if (value instanceof Map) {
+      return [...value.values()];
+    }
+
+    if (typeof value === "object" && value !== null) {
+      return Object.entries(value);
+    }
+
+    return [];
   }
 
   private getHttpProviders(): InstanceWrapper[] {

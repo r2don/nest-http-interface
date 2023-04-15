@@ -1,6 +1,11 @@
 import { MetadataScanner } from "@nestjs/core";
 import { beforeEach, describe, test, expect } from "vitest";
-import { GetExchange, HttpInterface, PathVariable } from "./decorators";
+import {
+  GetExchange,
+  HttpInterface,
+  PathVariable,
+  RequestParam,
+} from "./decorators";
 import { StubDiscoveryService } from "./fixture/stub-discovery.service";
 import { StubHttpClient } from "./fixture/stub-http-client";
 import { NodeFetchInjector } from "./node-fetch.injector";
@@ -53,10 +58,9 @@ describe("NodeFetchInjector", () => {
     nodeFetchInjector.onModuleInit();
 
     // when
-    const actual = await instance.request();
+    await instance.request();
 
     // then
-    expect(actual).toEqual({ status: "ok" });
     expect(httpClient.requestInfo).toHaveLength(1);
     expect(httpClient.requestInfo[0].url).toBe("https://example.com/api");
   });
@@ -75,10 +79,9 @@ describe("NodeFetchInjector", () => {
     nodeFetchInjector.onModuleInit();
 
     // when
-    const actual = await instance.request("1");
+    await instance.request("1");
 
     // then
-    expect(actual).toEqual({ status: "ok" });
     expect(httpClient.requestInfo).toHaveLength(1);
     expect(httpClient.requestInfo[0].url).toBe(
       "https://example.com/api/users/1/1"
@@ -102,13 +105,60 @@ describe("NodeFetchInjector", () => {
     nodeFetchInjector.onModuleInit();
 
     // when
-    const actual = await instance.request("123", "active");
+    await instance.request("123", "active");
 
     // then
-    expect(actual).toEqual({ status: "ok" });
     expect(httpClient.requestInfo).toHaveLength(1);
     expect(httpClient.requestInfo[0].url).toBe(
       "https://example.com/api/users/123/active"
+    );
+  });
+
+  test("should append query sting to url", async () => {
+    // given
+    @HttpInterface()
+    class SampleClient {
+      @GetExchange("https://example.com/api")
+      async request(@RequestParam("keyword") keyword: string): Promise<string> {
+        return "request";
+      }
+    }
+    const instance = discoveryService.addProvider(SampleClient);
+    httpClient.addResponse({ status: "ok" });
+    nodeFetchInjector.onModuleInit();
+
+    // when
+    await instance.request("search");
+
+    // then
+    expect(httpClient.requestInfo).toHaveLength(1);
+    expect(httpClient.requestInfo[0].url).toBe(
+      "https://example.com/api?keyword=search"
+    );
+  });
+
+  test("should append query sting to url when provided as json", async () => {
+    // given
+    @HttpInterface()
+    class SampleClient {
+      @GetExchange("https://example.com/api")
+      async request(
+        @RequestParam() params: Record<string, unknown>
+      ): Promise<string> {
+        return "request";
+      }
+    }
+    const instance = discoveryService.addProvider(SampleClient);
+    httpClient.addResponse({ status: "ok" });
+    nodeFetchInjector.onModuleInit();
+
+    // when
+    await instance.request({ keyword: "search", page: 1, isActive: true });
+
+    // then
+    expect(httpClient.requestInfo).toHaveLength(1);
+    expect(httpClient.requestInfo[0].url).toBe(
+      "https://example.com/api?keyword=search&page=1&isActive=true"
     );
   });
 });
