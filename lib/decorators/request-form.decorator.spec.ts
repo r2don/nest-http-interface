@@ -2,7 +2,7 @@ import { describe, test, expect } from "vitest";
 import { REQUEST_FORM_METADATA } from "./constants";
 import {
   RequestForm,
-  type RequestFromMetadata,
+  type RequestFormMetadata,
 } from "./request-form.decorator";
 
 describe("RequestForm", () => {
@@ -15,7 +15,7 @@ describe("RequestForm", () => {
     }
 
     // when
-    const result: RequestFromMetadata = Reflect.getMetadata(
+    const result: RequestFormMetadata = Reflect.getMetadata(
       REQUEST_FORM_METADATA,
       TestService.prototype,
       "request"
@@ -35,7 +35,7 @@ describe("RequestForm", () => {
     }
 
     // when
-    const result: RequestFromMetadata = Reflect.getMetadata(
+    const result: RequestFormMetadata = Reflect.getMetadata(
       REQUEST_FORM_METADATA,
       TestService.prototype,
       "request"
