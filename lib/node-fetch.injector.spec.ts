@@ -10,6 +10,7 @@ import {
   PathVariable,
   PostExchange,
   PutExchange,
+  RequestBody,
   RequestParam,
 } from "./decorators";
 import { StubDiscoveryService } from "./fixture/stub-discovery.service";
@@ -214,5 +215,55 @@ describe("NodeFetchInjector", () => {
     // then
     expect(httpClient.requestInfo).toHaveLength(1);
     expect(httpClient.requestInfo[0].method).toBe(method);
+  });
+
+  test("should include body", async () => {
+    // given
+    @HttpInterface()
+    class SampleClient {
+      @PostExchange("https://example.com/api")
+      async request(@RequestBody("name") name: string): Promise<string> {
+        return "request";
+      }
+    }
+    const instance = discoveryService.addProvider(SampleClient);
+    httpClient.addResponse({ status: "ok" });
+    nodeFetchInjector.onModuleInit();
+
+    // when
+    await instance.request("userName");
+
+    // then
+    expect(httpClient.requestInfo).toHaveLength(1);
+    expect(await httpClient.requestInfo[0].text()).toBe('{"name":"userName"}');
+    expect(httpClient.requestInfo[0].headers.get("Content-Type")).toBe(
+      "application/json"
+    );
+  });
+
+  test("should include body provided by json", async () => {
+    // given
+    @HttpInterface()
+    class SampleClient {
+      @PostExchange("https://example.com/api")
+      async request(
+        @RequestBody() body: Record<string, unknown>
+      ): Promise<string> {
+        return "request";
+      }
+    }
+    const instance = discoveryService.addProvider(SampleClient);
+    httpClient.addResponse({ status: "ok" });
+    nodeFetchInjector.onModuleInit();
+
+    // when
+    await instance.request({ name: "userName" });
+
+    // then
+    expect(httpClient.requestInfo).toHaveLength(1);
+    expect(await httpClient.requestInfo[0].text()).toBe('{"name":"userName"}');
+    expect(httpClient.requestInfo[0].headers.get("Content-Type")).toBe(
+      "application/json"
+    );
   });
 });

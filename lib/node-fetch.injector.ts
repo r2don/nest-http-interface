@@ -7,10 +7,13 @@ import {
   type HttpExchangeMetadata,
   PATH_VARIABLE_METADATA,
   type PathVariableMetadata,
+  REQUEST_BODY_METADATA,
   REQUEST_PARAM_METADATA,
+  type RequestBodyMetadata,
   type RequestParamMetadata,
 } from "./decorators";
 import { HttpClient } from "./types/http-client.interface";
+import { TupleArrayBuilder } from "./utils/tuple-array-builder";
 import { URLBuilder } from "./utils/url-builder";
 
 @Injectable()
@@ -53,8 +56,34 @@ export class NodeFetchInjector implements OnModuleInit {
           const requestParamMetadata = getMetadata<RequestParamMetadata>(
             REQUEST_PARAM_METADATA
           );
+          const requestBodyMetadata = getMetadata<RequestBodyMetadata>(
+            REQUEST_BODY_METADATA
+          );
 
           wrapper.instance[methodName] = async (...args: any[]) => {
+            const payload = requestBodyMetadata
+              ?.toArray()
+              .reduce(
+                (
+                  acc: Record<string, unknown>,
+                  [index, value]: [number, any]
+                ) => {
+                  if (typeof value !== "undefined") {
+                    acc[value] = args[index];
+                    return acc;
+                  }
+
+                  TupleArrayBuilder.of<string, unknown>(args[index]).forEach(
+                    ([k, v]) => {
+                      acc[k] = v;
+                    }
+                  );
+
+                  return acc;
+                },
+                {}
+              );
+
             const urlBuilder = new URLBuilder(
               baseUrl,
               httpExchangeMetadata.url,
@@ -69,6 +98,14 @@ export class NodeFetchInjector implements OnModuleInit {
               .request(
                 new Request(urlBuilder.build(), {
                   method: httpExchangeMetadata.method,
+                  headers:
+                    typeof payload !== "undefined"
+                      ? { "Content-Type": "application/json" }
+                      : undefined,
+                  body:
+                    typeof payload !== "undefined"
+                      ? JSON.stringify(payload)
+                      : undefined,
                 })
               )
               .then(async (response) => await response.json());

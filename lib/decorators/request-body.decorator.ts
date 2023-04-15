@@ -1,7 +1,7 @@
 import { REQUEST_BODY_METADATA } from "./constants";
 import { MetadataMap } from "../types/metadata-map";
 
-export type RequestBodyMetadata = Map<number, string | undefined>;
+export type RequestBodyMetadata = MetadataMap<number, string | undefined>;
 
 export function RequestBody(key?: string): ParameterDecorator {
   return (target, propertyKey, parameterIndex) => {
