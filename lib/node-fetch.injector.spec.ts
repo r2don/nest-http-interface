@@ -13,8 +13,8 @@ import {
   RequestBody,
   RequestParam,
 } from "./decorators";
-import { StubDiscoveryService } from "./fixture/stub-discovery.service";
-import { StubHttpClient } from "./fixture/stub-http-client";
+import { StubDiscoveryService } from "./fixtures/stub-discovery.service";
+import { StubHttpClient } from "./fixtures/stub-http-client";
 import { NodeFetchInjector } from "./node-fetch.injector";
 
 describe("NodeFetchInjector", () => {

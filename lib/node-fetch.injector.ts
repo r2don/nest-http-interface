@@ -60,7 +60,7 @@ export class NodeFetchInjector implements OnModuleInit {
             REQUEST_BODY_METADATA
           );
 
-          wrapper.instance[methodName] = async (...args: any[]) => {
+          wrapper.instance[methodName] = async (...args: never[]) => {
             const payload = requestBodyMetadata
               ?.toArray()
               .reduce(

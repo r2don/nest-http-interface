@@ -18,6 +18,7 @@
     "lib/**/*"
   ],
   "exclude": [
+    "lib/fixtures/**/*",
     "node_modules",
     "tests",
     "**/*.spec.ts"
