@@ -1,3 +1,4 @@
+import querystring from "node:querystring";
 import { TupleArrayBuilder } from "./tuple-array.builder";
 
 export class RequestParamBuilder {
@@ -20,20 +21,24 @@ export class RequestParamBuilder {
       return "";
     }
 
-    const searchParams = new URLSearchParams();
-    this.metadata.forEach(([index, key]) => {
-      if (key != null) {
-        searchParams.set(key, args[index]);
-        return;
-      }
-
-      TupleArrayBuilder.of<string, unknown>(args[index]).forEach(
-        ([key, value]) => {
-          searchParams.set(key, `${value?.toString() ?? ""}`);
+    const result = this.metadata.reduce<Record<string, any>>(
+      (acc, [index, key]) => {
+        if (key != null) {
+          acc[key] = args[index];
+          return acc;
         }
-      );
-    });
 
-    return "?" + searchParams.toString();
+        TupleArrayBuilder.of<string, unknown>(args[index]).forEach(
+          ([key, value]) => {
+            acc[key] = value;
+          }
+        );
+
+        return acc;
+      },
+      {}
+    );
+
+    return "?" + querystring.stringify(result);
   }
 }
