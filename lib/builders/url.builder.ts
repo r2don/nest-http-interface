@@ -1,8 +1,8 @@
+import { type PathVariableBuilder } from "./path-variable.builder";
 import { type RequestParamBuilder } from "./request-param.builder";
-import { type PathVariableMetadata } from "../decorators";
 
 export class UrlBuilder {
-  #pathParams: Array<[number, string]> = [];
+  #pathVariableBuilder: PathVariableBuilder | undefined;
   #requestParamBuilder: RequestParamBuilder | undefined;
 
   constructor(
@@ -10,7 +10,7 @@ export class UrlBuilder {
     private readonly path: string,
     private readonly args: any[],
     metadata: {
-      pathParam?: PathVariableMetadata;
+      pathParam?: PathVariableBuilder;
       queryParam?: RequestParamBuilder;
     } = {}
   ) {
@@ -18,22 +18,14 @@ export class UrlBuilder {
       this.host = this.path;
       this.path = "";
     }
-    this.#pathParams = metadata.pathParam?.toArray() ?? [];
+    this.#pathVariableBuilder = metadata.pathParam;
     this.#requestParamBuilder = metadata.queryParam;
   }
 
   build(): string {
     return (
-      this.replacePathVariable() +
+      (this.#pathVariableBuilder?.build(this.url, this.args) ?? this.url) +
       (this.#requestParamBuilder?.build(this.args) ?? "")
-    );
-  }
-
-  private replacePathVariable(): string {
-    return this.#pathParams.reduce(
-      (url, [index, value]) =>
-        url.replace(new RegExp(`{${value}}`, "g"), this.args[index]),
-      this.url
     );
   }
 

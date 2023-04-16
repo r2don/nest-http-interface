@@ -1,8 +1,7 @@
 import { describe, test, expect } from "vitest";
+import { PathVariableBuilder } from "./path-variable.builder";
 import { RequestParamBuilder } from "./request-param.builder";
 import { UrlBuilder } from "./url.builder";
-import { type PathVariableMetadata } from "../decorators";
-import { MetadataMap } from "../types/metadata-map";
 
 describe("UrlBuilder", () => {
   test("should build with base url", () => {
@@ -24,7 +23,7 @@ describe("UrlBuilder", () => {
     const host = "https://example.com";
     const path = "api/users/{id}";
     const args = [1, 2];
-    const pathParam: PathVariableMetadata = new MetadataMap([[1, "id"]]);
+    const pathParam = new PathVariableBuilder(1, "id");
     const urlBuilder = new UrlBuilder(host, path, args, { pathParam });
 
     // when

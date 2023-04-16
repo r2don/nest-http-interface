@@ -5,11 +5,7 @@ export class RequestParamBuilder {
   metadata: Array<[index: number, key: string | undefined]> = [];
 
   constructor(index: number, key?: string) {
-    this.metadata.push([index, key]);
-  }
-
-  get length(): number {
-    return this.metadata.length;
+    this.add(index, key);
   }
 
   add(index: number, key?: string): void {
@@ -17,10 +13,6 @@ export class RequestParamBuilder {
   }
 
   build(args: any[]): string {
-    if (this.metadata.length === 0) {
-      return "";
-    }
-
     const result = this.metadata.reduce<Record<string, any>>(
       (acc, [index, key]) => {
         if (key != null) {

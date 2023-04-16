@@ -1,23 +1,26 @@
 import { PATH_VARIABLE_METADATA } from "./constants";
-import { MetadataMap } from "../types/metadata-map";
-
-export type PathVariableMetadata = MetadataMap<number, string>;
+import { PathVariableBuilder } from "../builders/path-variable.builder";
 
 export function PathVariable(name: string): ParameterDecorator {
   return (target, propertyKey, parameterIndex) => {
-    if (typeof propertyKey === "undefined") {
+    if (propertyKey == null) {
       return;
     }
 
-    const metadata: PathVariableMetadata =
-      Reflect.getMetadata(PATH_VARIABLE_METADATA, target, propertyKey) ??
-      new MetadataMap();
+    const builder: PathVariableBuilder | undefined = Reflect.getMetadata(
+      PATH_VARIABLE_METADATA,
+      target,
+      propertyKey
+    );
 
-    metadata.set(parameterIndex, name);
+    if (builder != null) {
+      builder.add(parameterIndex, name);
+      return;
+    }
 
     Reflect.defineMetadata(
       PATH_VARIABLE_METADATA,
-      metadata,
+      new PathVariableBuilder(parameterIndex, name),
       target,
       propertyKey
     );

@@ -7,14 +7,14 @@ export function RequestParam(key?: string): ParameterDecorator {
       return;
     }
 
-    const metadata: RequestParamBuilder | undefined = Reflect.getMetadata(
+    const builder: RequestParamBuilder | undefined = Reflect.getMetadata(
       REQUEST_PARAM_METADATA,
       target,
       propertyKey
     );
 
-    if (metadata != null) {
-      metadata.add(parameterIndex, key);
+    if (builder != null) {
+      builder.add(parameterIndex, key);
       return;
     }
 

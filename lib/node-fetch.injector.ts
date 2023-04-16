@@ -1,6 +1,7 @@
 import { Injectable, type OnModuleInit } from "@nestjs/common";
 import { DiscoveryService, MetadataScanner } from "@nestjs/core";
 import { type InstanceWrapper } from "@nestjs/core/injector/instance-wrapper";
+import { type PathVariableBuilder } from "./builders/path-variable.builder";
 import { type RequestParamBuilder } from "./builders/request-param.builder";
 import { TupleArrayBuilder } from "./builders/tuple-array.builder";
 import { UrlBuilder } from "./builders/url.builder";
@@ -9,7 +10,6 @@ import {
   HTTP_INTERFACE_METADATA,
   type HttpExchangeMetadata,
   PATH_VARIABLE_METADATA,
-  type PathVariableMetadata,
   REQUEST_BODY_METADATA,
   REQUEST_PARAM_METADATA,
   type RequestBodyMetadata,
@@ -50,7 +50,7 @@ export class NodeFetchInjector implements OnModuleInit {
             return;
           }
 
-          const pathMetadata = getMetadata<PathVariableMetadata>(
+          const pathMetadata = getMetadata<PathVariableBuilder>(
             PATH_VARIABLE_METADATA
           );
           const requestParamMetadata = getMetadata<RequestParamBuilder>(
