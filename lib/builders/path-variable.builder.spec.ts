@@ -1,8 +1,8 @@
-import { describe, it, expect } from "vitest";
+import { describe, test, expect } from "vitest";
 import { PathVariableBuilder } from "./path-variable.builder";
 
 describe("PathVariableBuilder", () => {
-  it("should replace url with given variable", () => {
+  test("should replace url with given variable", () => {
     // given
     const builder = new PathVariableBuilder(0, "id");
     const args = [123];
@@ -14,7 +14,7 @@ describe("PathVariableBuilder", () => {
     expect(actual).toBe("/user/123");
   });
 
-  it("should replace multiple variables in url", () => {
+  test("should replace multiple variables in url", () => {
     // given
     const builder = new PathVariableBuilder(0, "id");
     builder.add(1, "name");
@@ -28,7 +28,7 @@ describe("PathVariableBuilder", () => {
     expect(actual).toBe("/user/123/profile/john");
   });
 
-  it("should handle url without variables", () => {
+  test("should handle url without variables", () => {
     // given
     const builder = new PathVariableBuilder(0, "id");
     const args = [123];
@@ -40,7 +40,7 @@ describe("PathVariableBuilder", () => {
     expect(actual).toBe("/user/profile");
   });
 
-  it("should handle variables not replaced in url", () => {
+  test("should handle variables not replaced in url", () => {
     // given
     const builder = new PathVariableBuilder(0, "id");
     const args = [123];
@@ -52,7 +52,7 @@ describe("PathVariableBuilder", () => {
     expect(actual).toBe("/user/123/profile/{name}");
   });
 
-  it("should replace multiple variables with same name", () => {
+  test("should replace multiple variables with same name", () => {
     // given
     const builder = new PathVariableBuilder(0, "id");
     const args = [123];

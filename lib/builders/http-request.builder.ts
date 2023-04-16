@@ -1,12 +1,11 @@
 import { type PathVariableBuilder } from "./path-variable.builder";
+import { type RequestBodyBuilder } from "./request-body.builder";
 import { type RequestParamBuilder } from "./request-param.builder";
-import { TupleArrayBuilder } from "./tuple-array.builder";
 import { UrlBuilder } from "./url.builder";
 import {
   PATH_VARIABLE_METADATA,
   REQUEST_BODY_METADATA,
   REQUEST_PARAM_METADATA,
-  type RequestBodyMetadata,
 } from "../decorators";
 import { type HttpMethod } from "../types/http-method";
 
@@ -14,7 +13,7 @@ export class HttpRequestBuilder {
   private baseUrl = "";
   private readonly pathVariableBuilder: PathVariableBuilder | undefined;
   private readonly requestParamBuilder: RequestParamBuilder | undefined;
-  private readonly requestBodyMetadata: RequestBodyMetadata | undefined;
+  private readonly requestBodyBuilder: RequestBodyBuilder | undefined;
 
   constructor(
     readonly target: object,
@@ -24,7 +23,7 @@ export class HttpRequestBuilder {
   ) {
     this.pathVariableBuilder = this.getMetadata(PATH_VARIABLE_METADATA);
     this.requestParamBuilder = this.getMetadata(REQUEST_PARAM_METADATA);
-    this.requestBodyMetadata = this.getMetadata(REQUEST_BODY_METADATA);
+    this.requestBodyBuilder = this.getMetadata(REQUEST_BODY_METADATA);
   }
 
   setBaseUrl(baseUrl: string): void {
@@ -32,20 +31,7 @@ export class HttpRequestBuilder {
   }
 
   build(args: any[]): Request {
-    const payload = this.requestBodyMetadata
-      ?.toArray()
-      .reduce((acc: Record<string, unknown>, [index, value]: [number, any]) => {
-        if (typeof value !== "undefined") {
-          acc[value] = args[index];
-          return acc;
-        }
-
-        TupleArrayBuilder.of<string, unknown>(args[index]).forEach(([k, v]) => {
-          acc[k] = v;
-        });
-
-        return acc;
-      }, {});
+    const payload = this.requestBodyBuilder?.build(args);
     const urlBuilder = new UrlBuilder(this.baseUrl, this.url, args, {
       pathParam: this.pathVariableBuilder,
       queryParam: this.requestParamBuilder,
@@ -54,11 +40,10 @@ export class HttpRequestBuilder {
     return new Request(urlBuilder.build(), {
       method: this.method,
       headers:
-        typeof payload !== "undefined"
+        payload !== undefined
           ? { "Content-Type": "application/json" }
           : undefined,
-      body:
-        typeof payload !== "undefined" ? JSON.stringify(payload) : undefined,
+      body: payload,
     });
   }
 

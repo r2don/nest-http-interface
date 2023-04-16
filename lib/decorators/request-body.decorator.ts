@@ -1,23 +1,26 @@
 import { REQUEST_BODY_METADATA } from "./constants";
-import { MetadataMap } from "../types/metadata-map";
-
-export type RequestBodyMetadata = MetadataMap<number, string | undefined>;
+import { RequestBodyBuilder } from "../builders/request-body.builder";
 
 export function RequestBody(key?: string): ParameterDecorator {
   return (target, propertyKey, parameterIndex) => {
-    if (typeof propertyKey === "undefined") {
+    if (propertyKey == null) {
       return;
     }
 
-    const metadata =
-      Reflect.getMetadata(REQUEST_BODY_METADATA, target, propertyKey) ??
-      new MetadataMap();
+    const builder: RequestBodyBuilder | undefined = Reflect.getMetadata(
+      REQUEST_BODY_METADATA,
+      target,
+      propertyKey
+    );
 
-    metadata.set(parameterIndex, key);
+    if (builder != null) {
+      builder.add(parameterIndex, key);
+      return;
+    }
 
     Reflect.defineMetadata(
       REQUEST_BODY_METADATA,
-      metadata,
+      new RequestBodyBuilder(parameterIndex, key),
       target,
       propertyKey
     );

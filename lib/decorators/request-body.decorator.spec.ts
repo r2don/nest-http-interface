@@ -1,9 +1,8 @@
 import { describe, test, expect } from "vitest";
 import { REQUEST_BODY_METADATA } from "./constants";
-import {
-  RequestBody,
-  type RequestBodyMetadata,
-} from "./request-body.decorator";
+import { RequestBody } from "./request-body.decorator";
+import { type RequestBodyBuilder } from "../builders/request-body.builder";
+import { type RequestParamBuilder } from "../builders/request-param.builder";
 
 describe("RequestBody", () => {
   test("should set request body metadata with empty key", () => {
@@ -15,15 +14,14 @@ describe("RequestBody", () => {
     }
 
     // when
-    const result: RequestBodyMetadata = Reflect.getMetadata(
+    const result: RequestBodyBuilder = Reflect.getMetadata(
       REQUEST_BODY_METADATA,
       TestService.prototype,
       "request"
     );
 
     // then
-    expect(result).toHaveLength(1);
-    expect(result.get(0)).toBeUndefined();
+    expect(result.metadata).toEqual([[0, undefined]]);
   });
 
   test("should set request body metadata with key", () => {
@@ -35,14 +33,38 @@ describe("RequestBody", () => {
     }
 
     // when
-    const result: RequestBodyMetadata = Reflect.getMetadata(
+    const result: RequestBodyBuilder = Reflect.getMetadata(
       REQUEST_BODY_METADATA,
       TestService.prototype,
       "request"
     );
 
     // then
-    expect(result).toHaveLength(1);
-    expect(result.get(0)).toBe("foo");
+    expect(result.metadata).toEqual([[0, "foo"]]);
+  });
+
+  test("should set request body metadata with multiple decorator", () => {
+    // given
+    class TestService {
+      request(
+        @RequestBody("foo") foo: string,
+        @RequestBody() bar: { bar: string }
+      ): string {
+        return foo;
+      }
+    }
+
+    // when
+    const result: RequestParamBuilder = Reflect.getMetadata(
+      REQUEST_BODY_METADATA,
+      TestService.prototype,
+      "request"
+    );
+
+    // then
+    expect(result.metadata).toEqual([
+      [1, undefined],
+      [0, "foo"],
+    ]);
   });
 });
