@@ -16,13 +16,13 @@ export class RequestParamBuilder {
     const result = this.metadata.reduce<Record<string, any>>(
       (acc, [index, key]) => {
         if (key != null) {
-          acc[key] = args[index];
+          acc[key] = String(args[index]);
           return acc;
         }
 
         TupleArrayBuilder.of<string, unknown>(args[index]).forEach(
           ([key, value]) => {
-            acc[key] = value;
+            acc[key] = String(value);
           }
         );
 

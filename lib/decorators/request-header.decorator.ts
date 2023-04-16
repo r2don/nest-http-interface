@@ -1,23 +1,26 @@
 import { REQUEST_HEADER_METADATA } from "./constants";
-import { MetadataMap } from "../types/metadata-map";
-
-export type RequestHeaderMetadata = MetadataMap<number, string>;
+import { RequestHeaderBuilder } from "../builders/request-header.builder";
 
 export function RequestHeader(key?: string): ParameterDecorator {
   return (target, propertyKey, parameterIndex) => {
-    if (typeof propertyKey === "undefined") {
+    if (propertyKey == null) {
       return;
     }
 
-    const metadata =
-      Reflect.getMetadata(REQUEST_HEADER_METADATA, target, propertyKey) ??
-      new MetadataMap();
+    const builder: RequestHeaderBuilder | undefined = Reflect.getMetadata(
+      REQUEST_HEADER_METADATA,
+      target,
+      propertyKey
+    );
 
-    metadata.set(parameterIndex, key);
+    if (builder != null) {
+      builder.add(parameterIndex, key);
+      return;
+    }
 
     Reflect.defineMetadata(
       REQUEST_HEADER_METADATA,
-      metadata,
+      new RequestHeaderBuilder(parameterIndex, key),
       target,
       propertyKey
     );

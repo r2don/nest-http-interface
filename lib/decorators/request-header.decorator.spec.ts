@@ -1,9 +1,7 @@
 import { describe, test, expect } from "vitest";
 import { REQUEST_HEADER_METADATA } from "./constants";
-import {
-  RequestHeader,
-  type RequestHeaderMetadata,
-} from "./request-header.decorator";
+import { RequestHeader } from "./request-header.decorator";
+import { type RequestHeaderBuilder } from "../builders/request-header.builder";
 
 describe("RequestHeader", () => {
   test("should set request header metadata with empty key", () => {
@@ -15,15 +13,14 @@ describe("RequestHeader", () => {
     }
 
     // when
-    const result: RequestHeaderMetadata = Reflect.getMetadata(
+    const result: RequestHeaderBuilder = Reflect.getMetadata(
       REQUEST_HEADER_METADATA,
       TestService.prototype,
       "request"
     );
 
     // then
-    expect(result).toHaveLength(1);
-    expect(result.get(0)).toBeUndefined();
+    expect(result.metadata).toEqual([[0, undefined]]);
   });
 
   test("should set request header metadata with key", () => {
@@ -35,14 +32,13 @@ describe("RequestHeader", () => {
     }
 
     // when
-    const result: RequestHeaderMetadata = Reflect.getMetadata(
+    const result: RequestHeaderBuilder = Reflect.getMetadata(
       REQUEST_HEADER_METADATA,
       TestService.prototype,
       "request"
     );
 
     // then
-    expect(result).toHaveLength(1);
-    expect(result.get(0)).toBe("foo");
+    expect(result.metadata).toEqual([[0, "foo"]]);
   });
 });

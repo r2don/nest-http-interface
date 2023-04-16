@@ -16,12 +16,12 @@ export class RequestFormBuilder {
 
     this.metadata.forEach(([index, key]) => {
       if (key != null) {
-        form.append(key, args[index]);
+        form.append(key, String(args[index]));
         return;
       }
 
       TupleArrayBuilder.of<string, any>(args[index]).forEach(([key, value]) => {
-        form.append(key, value);
+        form.append(key, String(value));
       });
     });
 
