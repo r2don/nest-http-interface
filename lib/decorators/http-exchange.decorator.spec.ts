@@ -1,7 +1,6 @@
 import { describe, test, expect } from "vitest";
 import { HTTP_EXCHANGE_METADATA } from "./constants";
 import {
-  type HttpExchangeMetadata,
   GetExchange,
   PostExchange,
   PutExchange,
@@ -10,6 +9,7 @@ import {
   PatchExchange,
   HeadExchange,
 } from "./http-exchange.decorator";
+import { type HttpRequestBuilder } from "../builders/http-request.builder";
 
 describe("HttpExchange", () => {
   test.each([
@@ -30,13 +30,15 @@ describe("HttpExchange", () => {
     }
 
     // when
-    const result: HttpExchangeMetadata = Reflect.getMetadata(
+    const result: HttpRequestBuilder = Reflect.getMetadata(
       HTTP_EXCHANGE_METADATA,
       TestService.prototype,
       "request"
     );
 
     // then
+    expect(result.target).toBe(TestService.prototype);
+    expect(result.propertyKey).toBe("request");
     expect(result.method).toBe(method);
     expect(result.url).toBe("/api/v1/sample");
   });

@@ -1,18 +1,6 @@
 import { HTTP_EXCHANGE_METADATA } from "./constants";
-
-type HttpMethod =
-  | "GET"
-  | "POST"
-  | "PUT"
-  | "DELETE"
-  | "PATCH"
-  | "HEAD"
-  | "OPTIONS";
-
-export interface HttpExchangeMetadata {
-  method: HttpMethod;
-  url: string;
-}
+import { HttpRequestBuilder } from "../builders/http-request.builder";
+import { type HttpMethod } from "../types/http-method";
 
 type AsyncFunction = (...args: any[]) => Promise<unknown>;
 
@@ -23,7 +11,7 @@ export function HttpExchange(method: HttpMethod, url: string) {
   ) {
     Reflect.defineMetadata(
       HTTP_EXCHANGE_METADATA,
-      { method, url },
+      new HttpRequestBuilder(target, propertyKey, method, url),
       target,
       propertyKey
     );

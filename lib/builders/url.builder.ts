@@ -2,8 +2,8 @@ import { type PathVariableBuilder } from "./path-variable.builder";
 import { type RequestParamBuilder } from "./request-param.builder";
 
 export class UrlBuilder {
-  #pathVariableBuilder: PathVariableBuilder | undefined;
-  #requestParamBuilder: RequestParamBuilder | undefined;
+  private readonly pathVariableBuilder: PathVariableBuilder | undefined;
+  private readonly requestParamBuilder: RequestParamBuilder | undefined;
 
   constructor(
     private readonly host: string,
@@ -18,14 +18,14 @@ export class UrlBuilder {
       this.host = this.path;
       this.path = "";
     }
-    this.#pathVariableBuilder = metadata.pathParam;
-    this.#requestParamBuilder = metadata.queryParam;
+    this.pathVariableBuilder = metadata.pathParam;
+    this.requestParamBuilder = metadata.queryParam;
   }
 
   build(): string {
     return (
-      (this.#pathVariableBuilder?.build(this.url, this.args) ?? this.url) +
-      (this.#requestParamBuilder?.build(this.args) ?? "")
+      (this.pathVariableBuilder?.build(this.url, this.args) ?? this.url) +
+      (this.requestParamBuilder?.build(this.args) ?? "")
     );
   }
 
