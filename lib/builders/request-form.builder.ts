@@ -1,4 +1,4 @@
-import { TupleArrayBuilder } from "./tuple-array.builder";
+import { TupleArrayBuilder } from './tuple-array.builder';
 
 export class RequestFormBuilder {
   metadata: Array<[index: number, key: string | undefined]> = [];

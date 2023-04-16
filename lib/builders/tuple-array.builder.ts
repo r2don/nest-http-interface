@@ -4,7 +4,7 @@ export class TupleArrayBuilder {
       return [];
     }
 
-    if (typeof value === "object") {
+    if (typeof value === 'object') {
       return Object.entries(value) as Array<[A, B]>;
     }
 

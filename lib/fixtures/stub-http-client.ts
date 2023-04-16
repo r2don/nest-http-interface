@@ -1,4 +1,4 @@
-import { type HttpClient } from "../types/http-client.interface";
+import { type HttpClient } from '../types/http-client.interface';
 
 export class StubHttpClient implements HttpClient {
   #requestInfo: Request[] = [];
@@ -9,8 +9,8 @@ export class StubHttpClient implements HttpClient {
 
     const response = this.#responses.shift();
 
-    if (typeof response === "undefined") {
-      throw new Error("empty response array");
+    if (typeof response === 'undefined') {
+      throw new Error('empty response array');
     }
 
     return response;

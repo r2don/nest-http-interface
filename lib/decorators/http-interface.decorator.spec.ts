@@ -1,9 +1,9 @@
-import { describe, test, expect } from "vitest";
-import { HTTP_INTERFACE_METADATA } from "./constants";
-import { HttpInterface } from "./http-interface.decorator";
+import { describe, test, expect } from 'vitest';
+import { HTTP_INTERFACE_METADATA } from './constants';
+import { HttpInterface } from './http-interface.decorator';
 
-describe("HttpInterface", () => {
-  test("should set default url metadata", () => {
+describe('HttpInterface', () => {
+  test('should set default url metadata', () => {
     // given
     @HttpInterface()
     class TestService {}
@@ -11,25 +11,25 @@ describe("HttpInterface", () => {
     // when
     const result: string = Reflect.getMetadata(
       HTTP_INTERFACE_METADATA,
-      TestService.prototype
+      TestService.prototype,
     );
 
     // then
-    expect(result).toBe("");
+    expect(result).toBe('');
   });
 
-  test("should set provided url metadata", () => {
+  test('should set provided url metadata', () => {
     // given
-    @HttpInterface("/api/v1/sample")
+    @HttpInterface('/api/v1/sample')
     class TestService {}
 
     // when
     const result: string = Reflect.getMetadata(
       HTTP_INTERFACE_METADATA,
-      TestService.prototype
+      TestService.prototype,
     );
 
     // then
-    expect(result).toBe("/api/v1/sample");
+    expect(result).toBe('/api/v1/sample');
   });
 });

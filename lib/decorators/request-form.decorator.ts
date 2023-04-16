@@ -1,5 +1,5 @@
-import { REQUEST_FORM_METADATA } from "./constants";
-import { RequestFormBuilder } from "../builders/request-form.builder";
+import { REQUEST_FORM_METADATA } from './constants';
+import { RequestFormBuilder } from '../builders/request-form.builder';
 
 export function RequestForm(key?: string): ParameterDecorator {
   return (target, propertyKey, parameterIndex) => {
@@ -10,7 +10,7 @@ export function RequestForm(key?: string): ParameterDecorator {
     const builder: RequestFormBuilder | undefined = Reflect.getMetadata(
       REQUEST_FORM_METADATA,
       target,
-      propertyKey
+      propertyKey,
     );
 
     if (builder != null) {
@@ -22,7 +22,7 @@ export function RequestForm(key?: string): ParameterDecorator {
       REQUEST_FORM_METADATA,
       new RequestFormBuilder(parameterIndex, key),
       target,
-      propertyKey
+      propertyKey,
     );
   };
 }

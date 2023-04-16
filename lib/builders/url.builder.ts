@@ -1,5 +1,5 @@
-import { type PathVariableBuilder } from "./path-variable.builder";
-import { type RequestParamBuilder } from "./request-param.builder";
+import { type PathVariableBuilder } from './path-variable.builder';
+import { type RequestParamBuilder } from './request-param.builder';
 
 export class UrlBuilder {
   constructor(
@@ -7,30 +7,30 @@ export class UrlBuilder {
     private readonly path: string,
     private readonly args: any[],
     private readonly pathVariableBuilder?: PathVariableBuilder,
-    private readonly requestParamBuilder?: RequestParamBuilder
+    private readonly requestParamBuilder?: RequestParamBuilder,
   ) {
-    if (this.host === "") {
+    if (this.host === '') {
       this.host = this.path;
-      this.path = "";
+      this.path = '';
     }
   }
 
   build(): string {
     return (
       (this.pathVariableBuilder?.build(this.url, this.args) ?? this.url) +
-      (this.requestParamBuilder?.build(this.args) ?? "")
+      (this.requestParamBuilder?.build(this.args) ?? '')
     );
   }
 
   get url(): string {
-    if (this.path === "") {
+    if (this.path === '') {
       return this.host;
     }
 
     if (this.isStartWithProtocol()) {
-      const [protocol, host] = this.host.split("://");
+      const [protocol, host] = this.host.split('://');
 
-      return protocol + "://" + this.replaceSlash(`${host}/${this.path}`);
+      return protocol + '://' + this.replaceSlash(`${host}/${this.path}`);
     }
 
     return this.replaceSlash(`${this.host}/${this.path}`);
@@ -41,6 +41,6 @@ export class UrlBuilder {
   }
 
   private replaceSlash(url: string): string {
-    return url.replace(/\/{2,}/g, "/");
+    return url.replace(/\/{2,}/g, '/');
   }
 }

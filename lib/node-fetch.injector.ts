@@ -1,16 +1,16 @@
-import { Injectable, type OnModuleInit } from "@nestjs/common";
-import { DiscoveryService, MetadataScanner } from "@nestjs/core";
-import { type InstanceWrapper } from "@nestjs/core/injector/instance-wrapper";
-import { type HttpRequestBuilder } from "./builders/http-request.builder";
-import { HTTP_EXCHANGE_METADATA, HTTP_INTERFACE_METADATA } from "./decorators";
-import { HttpClient } from "./types/http-client.interface";
+import { Injectable, type OnModuleInit } from '@nestjs/common';
+import { DiscoveryService, MetadataScanner } from '@nestjs/core';
+import { type InstanceWrapper } from '@nestjs/core/injector/instance-wrapper';
+import { type HttpRequestBuilder } from './builders/http-request.builder';
+import { HTTP_EXCHANGE_METADATA, HTTP_INTERFACE_METADATA } from './decorators';
+import { HttpClient } from './types/http-client.interface';
 
 @Injectable()
 export class NodeFetchInjector implements OnModuleInit {
   constructor(
     private readonly metadataScanner: MetadataScanner,
     private readonly discoveryService: DiscoveryService,
-    private readonly httpClient: HttpClient
+    private readonly httpClient: HttpClient,
   ) {}
 
   onModuleInit(): void {
@@ -19,7 +19,7 @@ export class NodeFetchInjector implements OnModuleInit {
     httpProviders.forEach((wrapper) => {
       const baseUrl: string | undefined = Reflect.getMetadata(
         HTTP_INTERFACE_METADATA,
-        wrapper.metatype.prototype
+        wrapper.metatype.prototype,
       );
 
       if (baseUrl == null) {
@@ -51,12 +51,12 @@ export class NodeFetchInjector implements OnModuleInit {
   }
 
   private getHttpProviders(): InstanceWrapper[] {
-    return this.discoveryService.getProviders().filter((wrapper) => {
-      const metadata = Reflect.getMetadata(
-        HTTP_INTERFACE_METADATA,
-        wrapper.metatype
+    return this.discoveryService
+      .getProviders()
+      .filter(
+        (wrapper) =>
+          Reflect.getMetadata(HTTP_INTERFACE_METADATA, wrapper.metatype) ==
+          null,
       );
-      return typeof metadata !== "undefined" || metadata !== null;
-    });
   }
 }

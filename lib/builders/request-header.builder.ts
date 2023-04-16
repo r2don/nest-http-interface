@@ -1,4 +1,4 @@
-import { TupleArrayBuilder } from "./tuple-array.builder";
+import { TupleArrayBuilder } from './tuple-array.builder';
 
 export class RequestHeaderBuilder {
   metadata: Array<[index: number, key: string | undefined]> = [];
@@ -21,7 +21,7 @@ export class RequestHeaderBuilder {
       TupleArrayBuilder.of<string, unknown>(args[index]).forEach(
         ([key, value]) => {
           acc[key] = String(value);
-        }
+        },
       );
 
       return acc;

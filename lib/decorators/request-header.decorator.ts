@@ -1,5 +1,5 @@
-import { REQUEST_HEADER_METADATA } from "./constants";
-import { RequestHeaderBuilder } from "../builders/request-header.builder";
+import { REQUEST_HEADER_METADATA } from './constants';
+import { RequestHeaderBuilder } from '../builders/request-header.builder';
 
 export function RequestHeader(key?: string): ParameterDecorator {
   return (target, propertyKey, parameterIndex) => {
@@ -10,7 +10,7 @@ export function RequestHeader(key?: string): ParameterDecorator {
     const builder: RequestHeaderBuilder | undefined = Reflect.getMetadata(
       REQUEST_HEADER_METADATA,
       target,
-      propertyKey
+      propertyKey,
     );
 
     if (builder != null) {
@@ -22,7 +22,7 @@ export function RequestHeader(key?: string): ParameterDecorator {
       REQUEST_HEADER_METADATA,
       new RequestHeaderBuilder(parameterIndex, key),
       target,
-      propertyKey
+      propertyKey,
     );
   };
 }

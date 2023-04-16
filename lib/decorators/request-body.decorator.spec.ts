@@ -1,11 +1,11 @@
-import { describe, test, expect } from "vitest";
-import { REQUEST_BODY_METADATA } from "./constants";
-import { RequestBody } from "./request-body.decorator";
-import { type RequestBodyBuilder } from "../builders/request-body.builder";
-import { type RequestParamBuilder } from "../builders/request-param.builder";
+import { describe, test, expect } from 'vitest';
+import { REQUEST_BODY_METADATA } from './constants';
+import { RequestBody } from './request-body.decorator';
+import { type RequestBodyBuilder } from '../builders/request-body.builder';
+import { type RequestParamBuilder } from '../builders/request-param.builder';
 
-describe("RequestBody", () => {
-  test("should set request body metadata with empty key", () => {
+describe('RequestBody', () => {
+  test('should set request body metadata with empty key', () => {
     // given
     class TestService {
       request(@RequestBody() query: { foo: string }): string {
@@ -17,17 +17,17 @@ describe("RequestBody", () => {
     const result: RequestBodyBuilder = Reflect.getMetadata(
       REQUEST_BODY_METADATA,
       TestService.prototype,
-      "request"
+      'request',
     );
 
     // then
     expect(result.metadata).toEqual([[0, undefined]]);
   });
 
-  test("should set request body metadata with key", () => {
+  test('should set request body metadata with key', () => {
     // given
     class TestService {
-      request(@RequestBody("foo") bar: string): string {
+      request(@RequestBody('foo') bar: string): string {
         return bar;
       }
     }
@@ -36,19 +36,19 @@ describe("RequestBody", () => {
     const result: RequestBodyBuilder = Reflect.getMetadata(
       REQUEST_BODY_METADATA,
       TestService.prototype,
-      "request"
+      'request',
     );
 
     // then
-    expect(result.metadata).toEqual([[0, "foo"]]);
+    expect(result.metadata).toEqual([[0, 'foo']]);
   });
 
-  test("should set request body metadata with multiple decorator", () => {
+  test('should set request body metadata with multiple decorator', () => {
     // given
     class TestService {
       request(
-        @RequestBody("foo") foo: string,
-        @RequestBody() bar: { bar: string }
+        @RequestBody('foo') foo: string,
+        @RequestBody() bar: { bar: string },
       ): string {
         return foo;
       }
@@ -58,13 +58,13 @@ describe("RequestBody", () => {
     const result: RequestParamBuilder = Reflect.getMetadata(
       REQUEST_BODY_METADATA,
       TestService.prototype,
-      "request"
+      'request',
     );
 
     // then
     expect(result.metadata).toEqual([
       [1, undefined],
-      [0, "foo"],
+      [0, 'foo'],
     ]);
   });
 });

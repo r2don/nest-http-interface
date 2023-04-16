@@ -12,8 +12,8 @@ export class PathVariableBuilder {
   build(url: string, args: any[]): string {
     return this.metadata.reduce<string>(
       (acc, [index, key]) =>
-        acc.replace(new RegExp(`{${key}}`, "g"), String(args[index])),
-      url
+        acc.replace(new RegExp(`{${key}}`, 'g'), String(args[index])),
+      url,
     );
   }
 }

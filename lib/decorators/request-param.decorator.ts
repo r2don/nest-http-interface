@@ -1,5 +1,5 @@
-import { REQUEST_PARAM_METADATA } from "./constants";
-import { RequestParamBuilder } from "../builders/request-param.builder";
+import { REQUEST_PARAM_METADATA } from './constants';
+import { RequestParamBuilder } from '../builders/request-param.builder';
 
 export function RequestParam(key?: string): ParameterDecorator {
   return (target, propertyKey, parameterIndex) => {
@@ -10,7 +10,7 @@ export function RequestParam(key?: string): ParameterDecorator {
     const builder: RequestParamBuilder | undefined = Reflect.getMetadata(
       REQUEST_PARAM_METADATA,
       target,
-      propertyKey
+      propertyKey,
     );
 
     if (builder != null) {
@@ -22,7 +22,7 @@ export function RequestParam(key?: string): ParameterDecorator {
       REQUEST_PARAM_METADATA,
       new RequestParamBuilder(parameterIndex, key),
       target,
-      propertyKey
+      propertyKey,
     );
   };
 }

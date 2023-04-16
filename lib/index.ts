@@ -1,2 +1,2 @@
-export * from "./decorators";
-export * from "./http-interface.module";
+export * from './decorators';
+export * from './http-interface.module';

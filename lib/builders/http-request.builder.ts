@@ -1,19 +1,19 @@
-import { type PathVariableBuilder } from "./path-variable.builder";
-import { PayloadBuilder } from "./payload.builder";
-import { type RequestHeaderBuilder } from "./request-header.builder";
-import { type RequestParamBuilder } from "./request-param.builder";
-import { UrlBuilder } from "./url.builder";
+import { type PathVariableBuilder } from './path-variable.builder';
+import { PayloadBuilder } from './payload.builder';
+import { type RequestHeaderBuilder } from './request-header.builder';
+import { type RequestParamBuilder } from './request-param.builder';
+import { UrlBuilder } from './url.builder';
 import {
   PATH_VARIABLE_METADATA,
   REQUEST_BODY_METADATA,
   REQUEST_FORM_METADATA,
   REQUEST_HEADER_METADATA,
   REQUEST_PARAM_METADATA,
-} from "../decorators";
-import { type HttpMethod } from "../types/http-method";
+} from '../decorators';
+import { type HttpMethod } from '../types/http-method';
 
 export class HttpRequestBuilder {
-  private baseUrl = "";
+  private baseUrl = '';
   private readonly pathVariableBuilder?: PathVariableBuilder;
   private readonly requestParamBuilder?: RequestParamBuilder;
   private readonly requestHeaderBuilder?: RequestHeaderBuilder;
@@ -23,14 +23,14 @@ export class HttpRequestBuilder {
     readonly target: object,
     readonly propertyKey: string,
     readonly method: HttpMethod,
-    readonly url: string
+    readonly url: string,
   ) {
     this.pathVariableBuilder = this.getMetadata(PATH_VARIABLE_METADATA);
     this.requestParamBuilder = this.getMetadata(REQUEST_PARAM_METADATA);
     this.requestHeaderBuilder = this.getMetadata(REQUEST_HEADER_METADATA);
     this.payloadBuilder = new PayloadBuilder(
       this.getMetadata(REQUEST_BODY_METADATA),
-      this.getMetadata(REQUEST_FORM_METADATA)
+      this.getMetadata(REQUEST_FORM_METADATA),
     );
   }
 
@@ -44,7 +44,7 @@ export class HttpRequestBuilder {
       this.url,
       args,
       this.pathVariableBuilder,
-      this.requestParamBuilder
+      this.requestParamBuilder,
     );
     const payload = this.payloadBuilder.build(args);
     const headers = this.requestHeaderBuilder?.build(args);

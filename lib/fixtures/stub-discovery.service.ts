@@ -2,9 +2,9 @@ import {
   type DiscoveryOptions,
   DiscoveryService,
   ModulesContainer,
-} from "@nestjs/core";
-import { type InstanceWrapper } from "@nestjs/core/injector/instance-wrapper";
-import { type Module } from "@nestjs/core/injector/module";
+} from '@nestjs/core';
+import { type InstanceWrapper } from '@nestjs/core/injector/instance-wrapper';
+import { type Module } from '@nestjs/core/injector/module';
 
 export class StubDiscoveryService extends DiscoveryService {
   #providers: InstanceWrapper[] = [];
@@ -30,7 +30,7 @@ export class StubDiscoveryService extends DiscoveryService {
 
   override getProviders(
     options?: DiscoveryOptions,
-    modules?: Module[]
+    modules?: Module[],
   ): InstanceWrapper[] {
     return this.#providers;
   }

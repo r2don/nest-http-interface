@@ -1,5 +1,5 @@
-import querystring from "node:querystring";
-import { TupleArrayBuilder } from "./tuple-array.builder";
+import querystring from 'node:querystring';
+import { TupleArrayBuilder } from './tuple-array.builder';
 
 export class RequestParamBuilder {
   metadata: Array<[index: number, key: string | undefined]> = [];
@@ -23,14 +23,14 @@ export class RequestParamBuilder {
         TupleArrayBuilder.of<string, unknown>(args[index]).forEach(
           ([key, value]) => {
             acc[key] = String(value);
-          }
+          },
         );
 
         return acc;
       },
-      {}
+      {},
     );
 
-    return "?" + querystring.stringify(result);
+    return '?' + querystring.stringify(result);
   }
 }
