@@ -1,12 +1,9 @@
-import { TupleArrayBuilder } from "./tuple-array-builder";
-import {
-  type PathVariableMetadata,
-  type RequestParamMetadata,
-} from "../decorators";
+import { type RequestParamBuilder } from "./request-param.builder";
+import { type PathVariableMetadata } from "../decorators";
 
-export class URLBuilder {
+export class UrlBuilder {
   #pathParams: Array<[number, string]> = [];
-  #queryParams: Array<[number, string | undefined]> = [];
+  #requestParamBuilder: RequestParamBuilder | undefined;
 
   constructor(
     private readonly host: string,
@@ -14,7 +11,7 @@ export class URLBuilder {
     private readonly args: any[],
     metadata: {
       pathParam?: PathVariableMetadata;
-      queryParam?: RequestParamMetadata;
+      queryParam?: RequestParamBuilder;
     } = {}
   ) {
     if (this.host.length === 0) {
@@ -22,11 +19,14 @@ export class URLBuilder {
       this.path = "";
     }
     this.#pathParams = metadata.pathParam?.toArray() ?? [];
-    this.#queryParams = metadata.queryParam?.toArray() ?? [];
+    this.#requestParamBuilder = metadata.queryParam;
   }
 
   build(): string {
-    return this.replacePathVariable() + this.appendQueryParams();
+    return (
+      this.replacePathVariable() +
+      (this.#requestParamBuilder?.build(this.args) ?? "")
+    );
   }
 
   private replacePathVariable(): string {
@@ -35,28 +35,6 @@ export class URLBuilder {
         url.replace(new RegExp(`{${value}}`, "g"), this.args[index]),
       this.url
     );
-  }
-
-  private appendQueryParams(): string {
-    if (this.#queryParams.length === 0) {
-      return "";
-    }
-
-    const searchParams = new URLSearchParams();
-    this.#queryParams.forEach(([paramIndex, queryParamKey]) => {
-      if (typeof queryParamKey !== "undefined") {
-        searchParams.set(queryParamKey, this.args[paramIndex]);
-        return;
-      }
-
-      TupleArrayBuilder.of<string, unknown>(this.args[paramIndex]).forEach(
-        ([key, value]) => {
-          searchParams.set(key, `${value?.toString() ?? ""}`);
-        }
-      );
-    });
-
-    return "?" + searchParams.toString();
   }
 
   get url(): string {

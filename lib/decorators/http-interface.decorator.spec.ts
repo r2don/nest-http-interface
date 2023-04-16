@@ -9,7 +9,7 @@ describe("HttpInterface", () => {
     class TestService {}
 
     // when
-    const result = Reflect.getMetadata(
+    const result: string = Reflect.getMetadata(
       HTTP_INTERFACE_METADATA,
       TestService.prototype
     );
@@ -24,7 +24,7 @@ describe("HttpInterface", () => {
     class TestService {}
 
     // when
-    const result = Reflect.getMetadata(
+    const result: string = Reflect.getMetadata(
       HTTP_INTERFACE_METADATA,
       TestService.prototype
     );

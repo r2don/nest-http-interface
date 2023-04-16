@@ -1,23 +1,26 @@
 import { REQUEST_PARAM_METADATA } from "./constants";
-import { MetadataMap } from "../types/metadata-map";
-
-export type RequestParamMetadata = MetadataMap<number, string | undefined>;
+import { RequestParamBuilder } from "../builders/request-param.builder";
 
 export function RequestParam(key?: string): ParameterDecorator {
   return (target, propertyKey, parameterIndex) => {
-    if (typeof propertyKey === "undefined") {
+    if (propertyKey == null) {
       return;
     }
 
-    const metadata =
-      Reflect.getMetadata(REQUEST_PARAM_METADATA, target, propertyKey) ??
-      new MetadataMap();
+    const metadata: RequestParamBuilder | undefined = Reflect.getMetadata(
+      REQUEST_PARAM_METADATA,
+      target,
+      propertyKey
+    );
 
-    metadata.set(parameterIndex, key);
+    if (metadata != null) {
+      metadata.add(parameterIndex, key);
+      return;
+    }
 
     Reflect.defineMetadata(
       REQUEST_PARAM_METADATA,
-      metadata,
+      new RequestParamBuilder(parameterIndex, key),
       target,
       propertyKey
     );

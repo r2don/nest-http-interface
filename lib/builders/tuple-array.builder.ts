@@ -1,6 +1,6 @@
 export class TupleArrayBuilder {
   static of<A, B>(value: unknown): Array<[A, B]> {
-    if (typeof value === "undefined") {
+    if (value === undefined) {
       return [];
     }
 

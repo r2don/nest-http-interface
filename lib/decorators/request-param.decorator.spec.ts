@@ -1,9 +1,7 @@
 import { describe, test, expect } from "vitest";
 import { REQUEST_PARAM_METADATA } from "./constants";
-import {
-  RequestParam,
-  type RequestParamMetadata,
-} from "./request-param.decorator";
+import { RequestParam } from "./request-param.decorator";
+import { type RequestParamBuilder } from "../builders/request-param.builder";
 
 describe("RequestParam", () => {
   test("should set request param metadata with empty key", () => {
@@ -15,34 +13,59 @@ describe("RequestParam", () => {
     }
 
     // when
-    const result: RequestParamMetadata = Reflect.getMetadata(
+    const result: RequestParamBuilder = Reflect.getMetadata(
       REQUEST_PARAM_METADATA,
       TestService.prototype,
       "request"
     );
 
     // then
-    expect(result).toHaveLength(1);
-    expect(result.get(0)).toBeUndefined();
+    expect(result.metadata).toHaveLength(1);
+    expect(result.metadata[0]).toEqual([0, undefined]);
   });
 
   test("should set request param metadata with key", () => {
     // given
     class TestService {
-      request(@RequestParam("foo") bar: string): string {
+      request(_foo: string, @RequestParam("bar") bar: string): string {
         return bar;
       }
     }
 
     // when
-    const result: RequestParamMetadata = Reflect.getMetadata(
+    const result: RequestParamBuilder = Reflect.getMetadata(
       REQUEST_PARAM_METADATA,
       TestService.prototype,
       "request"
     );
 
     // then
-    expect(result).toHaveLength(1);
-    expect(result.get(0)).toBe("foo");
+    expect(result.metadata).toHaveLength(1);
+    expect(result.metadata[0]).toEqual([1, "bar"]);
+  });
+
+  test("should set request param metadata with multiple decorator", () => {
+    // given
+    class TestService {
+      request(
+        @RequestParam("foo") foo: string,
+        @RequestParam() bar: { bar: string }
+      ): string {
+        return foo;
+      }
+    }
+
+    // when
+    const result: RequestParamBuilder = Reflect.getMetadata(
+      REQUEST_PARAM_METADATA,
+      TestService.prototype,
+      "request"
+    );
+
+    // then
+    expect(result.metadata).toEqual([
+      [1, undefined],
+      [0, "foo"],
+    ]);
   });
 });

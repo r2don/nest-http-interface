@@ -1,4 +1,4 @@
-import { TupleArrayBuilder } from "./tuple-array-builder";
+import { TupleArrayBuilder } from "./tuple-array.builder";
 import {
   type RequestBodyMetadata,
   type RequestFormMetadata,

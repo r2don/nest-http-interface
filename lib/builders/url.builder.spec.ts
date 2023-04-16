@@ -1,18 +1,16 @@
 import { describe, test, expect } from "vitest";
-import { URLBuilder } from "./url-builder";
-import {
-  type PathVariableMetadata,
-  type RequestParamMetadata,
-} from "../decorators";
+import { RequestParamBuilder } from "./request-param.builder";
+import { UrlBuilder } from "./url.builder";
+import { type PathVariableMetadata } from "../decorators";
 import { MetadataMap } from "../types/metadata-map";
 
-describe("URLBuilder", () => {
+describe("UrlBuilder", () => {
   test("should build with base url", () => {
     // given
     const host = "https://example.com";
     const path = "//api/1";
     const args = [1];
-    const urlBuilder = new URLBuilder(host, path, args);
+    const urlBuilder = new UrlBuilder(host, path, args);
 
     // when
     const actual = urlBuilder.build();
@@ -27,7 +25,7 @@ describe("URLBuilder", () => {
     const path = "api/users/{id}";
     const args = [1, 2];
     const pathParam: PathVariableMetadata = new MetadataMap([[1, "id"]]);
-    const urlBuilder = new URLBuilder(host, path, args, { pathParam });
+    const urlBuilder = new UrlBuilder(host, path, args, { pathParam });
 
     // when
     const actual = urlBuilder.build();
@@ -41,8 +39,8 @@ describe("URLBuilder", () => {
     const host = "https://example.com";
     const path = "";
     const args = ["search"];
-    const queryParam: RequestParamMetadata = new MetadataMap([[0, "keyword"]]);
-    const urlBuilder = new URLBuilder(host, path, args, { queryParam });
+    const queryParam = new RequestParamBuilder(0, "keyword");
+    const urlBuilder = new UrlBuilder(host, path, args, { queryParam });
 
     // when
     const actual = urlBuilder.build();
@@ -56,8 +54,8 @@ describe("URLBuilder", () => {
     const host = "https://example.com";
     const path = "api/user";
     const args = [{ keyword: "search" }];
-    const queryParam: RequestParamMetadata = new MetadataMap([[0, undefined]]);
-    const urlBuilder = new URLBuilder(host, path, args, { queryParam });
+    const queryParam = new RequestParamBuilder(0, undefined);
+    const urlBuilder = new UrlBuilder(host, path, args, { queryParam });
 
     // when
     const actual = urlBuilder.build();

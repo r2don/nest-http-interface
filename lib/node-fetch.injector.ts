@@ -1,6 +1,9 @@
 import { Injectable, type OnModuleInit } from "@nestjs/common";
 import { DiscoveryService, MetadataScanner } from "@nestjs/core";
 import { type InstanceWrapper } from "@nestjs/core/injector/instance-wrapper";
+import { type RequestParamBuilder } from "./builders/request-param.builder";
+import { TupleArrayBuilder } from "./builders/tuple-array.builder";
+import { UrlBuilder } from "./builders/url.builder";
 import {
   HTTP_EXCHANGE_METADATA,
   HTTP_INTERFACE_METADATA,
@@ -10,11 +13,8 @@ import {
   REQUEST_BODY_METADATA,
   REQUEST_PARAM_METADATA,
   type RequestBodyMetadata,
-  type RequestParamMetadata,
 } from "./decorators";
 import { HttpClient } from "./types/http-client.interface";
-import { TupleArrayBuilder } from "./utils/tuple-array-builder";
-import { URLBuilder } from "./utils/url-builder";
 
 @Injectable()
 export class NodeFetchInjector implements OnModuleInit {
@@ -53,7 +53,7 @@ export class NodeFetchInjector implements OnModuleInit {
           const pathMetadata = getMetadata<PathVariableMetadata>(
             PATH_VARIABLE_METADATA
           );
-          const requestParamMetadata = getMetadata<RequestParamMetadata>(
+          const requestParamMetadata = getMetadata<RequestParamBuilder>(
             REQUEST_PARAM_METADATA
           );
           const requestBodyMetadata = getMetadata<RequestBodyMetadata>(
@@ -84,7 +84,7 @@ export class NodeFetchInjector implements OnModuleInit {
                 {}
               );
 
-            const urlBuilder = new URLBuilder(
+            const urlBuilder = new UrlBuilder(
               baseUrl,
               httpExchangeMetadata.url,
               args,
