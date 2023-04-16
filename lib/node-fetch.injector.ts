@@ -17,33 +17,36 @@ export class NodeFetchInjector implements OnModuleInit {
     const httpProviders = this.getHttpProviders();
 
     httpProviders.forEach((wrapper) => {
-      const prototype = wrapper.metatype.prototype;
       const baseUrl: string | undefined = Reflect.getMetadata(
         HTTP_INTERFACE_METADATA,
-        prototype
+        wrapper.metatype.prototype
       );
 
       if (baseUrl == null) {
         return;
       }
 
-      this.metadataScanner
-        .getAllMethodNames(prototype)
-        .forEach((methodName) => {
-          const httpRequestBuilder: HttpRequestBuilder | undefined =
-            Reflect.getMetadata(HTTP_EXCHANGE_METADATA, prototype, methodName);
+      this.wrapMethods(wrapper, baseUrl);
+    });
+  }
 
-          if (httpRequestBuilder == null) {
-            return;
-          }
+  private wrapMethods(wrapper: InstanceWrapper, baseUrl: string): void {
+    const prototype = wrapper.metatype.prototype;
 
-          httpRequestBuilder.setBaseUrl(baseUrl);
+    this.metadataScanner.getAllMethodNames(prototype).forEach((methodName) => {
+      const httpRequestBuilder: HttpRequestBuilder | undefined =
+        Reflect.getMetadata(HTTP_EXCHANGE_METADATA, prototype, methodName);
 
-          wrapper.instance[methodName] = async (...args: never[]) =>
-            await this.httpClient
-              .request(httpRequestBuilder.build(args))
-              .then(async (response) => await response.json());
-        });
+      if (httpRequestBuilder == null) {
+        return;
+      }
+
+      httpRequestBuilder.setBaseUrl(baseUrl);
+
+      wrapper.instance[methodName] = async (...args: never[]) =>
+        await this.httpClient
+          .request(httpRequestBuilder.build(args))
+          .then(async (response) => await response.json());
     });
   }
 
