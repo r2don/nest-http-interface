@@ -11,6 +11,7 @@ import {
   PostExchange,
   PutExchange,
   RequestBody,
+  RequestForm,
   RequestParam,
 } from './decorators';
 import { StubDiscoveryService } from './fixtures/stub-discovery.service';
@@ -80,7 +81,6 @@ describe('NodeFetchInjector', () => {
       }
     }
     const instance = discoveryService.addProvider(SampleClient);
-    httpClient.addResponse({ status: 'ok' });
     nodeFetchInjector.onModuleInit();
 
     // when
@@ -101,7 +101,6 @@ describe('NodeFetchInjector', () => {
       }
     }
     const instance = discoveryService.addProvider(SampleClient);
-    httpClient.addResponse({ status: 'ok' });
     nodeFetchInjector.onModuleInit();
 
     // when
@@ -127,7 +126,6 @@ describe('NodeFetchInjector', () => {
       }
     }
     const instance = discoveryService.addProvider(SampleClient);
-    httpClient.addResponse({ status: 'ok' });
     nodeFetchInjector.onModuleInit();
 
     // when
@@ -150,7 +148,6 @@ describe('NodeFetchInjector', () => {
       }
     }
     const instance = discoveryService.addProvider(SampleClient);
-    httpClient.addResponse({ status: 'ok' });
     nodeFetchInjector.onModuleInit();
 
     // when
@@ -175,7 +172,6 @@ describe('NodeFetchInjector', () => {
       }
     }
     const instance = discoveryService.addProvider(SampleClient);
-    httpClient.addResponse({ status: 'ok' });
     nodeFetchInjector.onModuleInit();
 
     // when
@@ -206,7 +202,6 @@ describe('NodeFetchInjector', () => {
       }
     }
     const instance = discoveryService.addProvider(SampleClient);
-    httpClient.addResponse({ status: 'ok' });
     nodeFetchInjector.onModuleInit();
 
     // when
@@ -264,6 +259,34 @@ describe('NodeFetchInjector', () => {
     expect(await httpClient.requestInfo[0].text()).toBe('{"name":"userName"}');
     expect(httpClient.requestInfo[0].headers.get('Content-Type')).toBe(
       'application/json',
+    );
+  });
+
+  test('should include body provided by form', async () => {
+    // given
+    @HttpInterface()
+    class SampleClient {
+      @PostExchange('https://example.com/api')
+      async request(
+        @RequestForm() body: Record<string, unknown>,
+      ): Promise<string> {
+        return 'request';
+      }
+    }
+    const instance = discoveryService.addProvider(SampleClient);
+    httpClient.addResponse({ status: 'ok' });
+    nodeFetchInjector.onModuleInit();
+
+    // when
+    await instance.request({ foo: 'bar' });
+
+    // then
+    expect(httpClient.requestInfo).toHaveLength(1);
+    expect(await httpClient.requestInfo[0].text()).toContain(
+      `Content-Disposition: form-data; name="foo"`,
+    );
+    expect(httpClient.requestInfo[0].headers.get('Content-Type')).toBe(
+      'application/x-www-form-urlencoded',
     );
   });
 });

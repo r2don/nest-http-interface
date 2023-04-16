@@ -4,6 +4,25 @@ import { PathVariable } from './path-variable.decorator';
 import { type PathVariableBuilder } from '../builders/path-variable.builder';
 
 describe('PathVariable', () => {
+  test('should not create path variable metadata when not on method', () => {
+    // given
+    class TestService {
+      constructor(@PathVariable('foo') foo: string) {
+        return foo;
+      }
+    }
+
+    // when
+    const result = Reflect.getMetadata(
+      PATH_VARIABLE_METADATA,
+      TestService.prototype,
+      'request',
+    );
+
+    // then
+    expect(result).toBeUndefined();
+  });
+
   test('should set path variable metadata', () => {
     // given
     class TestService {

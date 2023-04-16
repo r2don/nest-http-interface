@@ -5,6 +5,25 @@ import { type RequestFormBuilder } from '../builders/request-form.builder';
 import { type RequestParamBuilder } from '../builders/request-param.builder';
 
 describe('RequestForm', () => {
+  test('should not create request form metadata when not on method', () => {
+    // given
+    class TestService {
+      constructor(@RequestForm() foo: string) {
+        return foo;
+      }
+    }
+
+    // when
+    const result = Reflect.getMetadata(
+      REQUEST_FORM_METADATA,
+      TestService.prototype,
+      'request',
+    );
+
+    // then
+    expect(result).toBeUndefined();
+  });
+
   test('should set request form metadata with empty key', () => {
     // given
     class TestService {

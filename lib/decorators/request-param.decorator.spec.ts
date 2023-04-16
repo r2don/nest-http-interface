@@ -4,6 +4,25 @@ import { RequestParam } from './request-param.decorator';
 import { type RequestParamBuilder } from '../builders/request-param.builder';
 
 describe('RequestParam', () => {
+  test('should not create request param metadata when not on method', () => {
+    // given
+    class TestService {
+      constructor(@RequestParam() foo: string) {
+        return foo;
+      }
+    }
+
+    // when
+    const result = Reflect.getMetadata(
+      REQUEST_PARAM_METADATA,
+      TestService.prototype,
+      'request',
+    );
+
+    // then
+    expect(result).toBeUndefined();
+  });
+
   test('should set request param metadata with empty key', () => {
     // given
     class TestService {

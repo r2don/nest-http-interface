@@ -74,4 +74,18 @@ describe('UrlBuilder', () => {
     // then
     expect(actual).toBe('https://example.com/api/user?keyword=search');
   });
+
+  test('should strip duplicated slash', () => {
+    // given
+    const host = '//example.com';
+    const path = '//api///user';
+    const args = [1];
+    const urlBuilder = new UrlBuilder(host, path, args);
+
+    // when
+    const actual = urlBuilder.build();
+
+    // then
+    expect(actual).toBe('/example.com/api/user');
+  });
 });

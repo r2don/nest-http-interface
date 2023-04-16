@@ -5,6 +5,25 @@ import { type RequestBodyBuilder } from '../builders/request-body.builder';
 import { type RequestParamBuilder } from '../builders/request-param.builder';
 
 describe('RequestBody', () => {
+  test('should not create request body metadata when not on method', () => {
+    // given
+    class TestService {
+      constructor(@RequestBody() foo: string) {
+        return foo;
+      }
+    }
+
+    // when
+    const result = Reflect.getMetadata(
+      REQUEST_BODY_METADATA,
+      TestService.prototype,
+      'request',
+    );
+
+    // then
+    expect(result).toBeUndefined();
+  });
+
   test('should set request body metadata with empty key', () => {
     // given
     class TestService {

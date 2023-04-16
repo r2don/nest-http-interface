@@ -9,11 +9,7 @@ export class StubHttpClient implements HttpClient {
 
     const response = this.#responses.shift();
 
-    if (typeof response === 'undefined') {
-      throw new Error('empty response array');
-    }
-
-    return response;
+    return response ?? new Response('{}', { status: 404 });
   }
 
   get requestInfo(): Request[] {
