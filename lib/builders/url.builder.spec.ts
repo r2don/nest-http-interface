@@ -23,8 +23,8 @@ describe("UrlBuilder", () => {
     const host = "https://example.com";
     const path = "api/users/{id}";
     const args = [1, 2];
-    const pathParam = new PathVariableBuilder(1, "id");
-    const urlBuilder = new UrlBuilder(host, path, args, { pathParam });
+    const pathBuilder = new PathVariableBuilder(1, "id");
+    const urlBuilder = new UrlBuilder(host, path, args, pathBuilder);
 
     // when
     const actual = urlBuilder.build();
@@ -38,8 +38,14 @@ describe("UrlBuilder", () => {
     const host = "https://example.com";
     const path = "";
     const args = ["search"];
-    const queryParam = new RequestParamBuilder(0, "keyword");
-    const urlBuilder = new UrlBuilder(host, path, args, { queryParam });
+    const paramBuilder = new RequestParamBuilder(0, "keyword");
+    const urlBuilder = new UrlBuilder(
+      host,
+      path,
+      args,
+      undefined,
+      paramBuilder
+    );
 
     // when
     const actual = urlBuilder.build();
@@ -53,8 +59,14 @@ describe("UrlBuilder", () => {
     const host = "https://example.com";
     const path = "api/user";
     const args = [{ keyword: "search" }];
-    const queryParam = new RequestParamBuilder(0, undefined);
-    const urlBuilder = new UrlBuilder(host, path, args, { queryParam });
+    const paramBuilder = new RequestParamBuilder(0, undefined);
+    const urlBuilder = new UrlBuilder(
+      host,
+      path,
+      args,
+      undefined,
+      paramBuilder
+    );
 
     // when
     const actual = urlBuilder.build();

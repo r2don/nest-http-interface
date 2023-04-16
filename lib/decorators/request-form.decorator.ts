@@ -1,23 +1,26 @@
 import { REQUEST_FORM_METADATA } from "./constants";
-import { MetadataMap } from "../types/metadata-map";
-
-export type RequestFormMetadata = MetadataMap<number, string | undefined>;
+import { RequestFormBuilder } from "../builders/request-form.builder";
 
 export function RequestForm(key?: string): ParameterDecorator {
   return (target, propertyKey, parameterIndex) => {
-    if (typeof propertyKey === "undefined") {
+    if (propertyKey == null) {
       return;
     }
 
-    const metadata =
-      Reflect.getMetadata(REQUEST_FORM_METADATA, target, propertyKey) ??
-      new MetadataMap();
+    const builder: RequestFormBuilder | undefined = Reflect.getMetadata(
+      REQUEST_FORM_METADATA,
+      target,
+      propertyKey
+    );
 
-    metadata.set(parameterIndex, key);
+    if (builder != null) {
+      builder.add(parameterIndex, key);
+      return;
+    }
 
     Reflect.defineMetadata(
       REQUEST_FORM_METADATA,
-      metadata,
+      new RequestFormBuilder(parameterIndex, key),
       target,
       propertyKey
     );

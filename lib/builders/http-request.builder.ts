@@ -1,19 +1,22 @@
 import { type PathVariableBuilder } from "./path-variable.builder";
 import { type RequestBodyBuilder } from "./request-body.builder";
+import { type RequestFormBuilder } from "./request-form.builder";
 import { type RequestParamBuilder } from "./request-param.builder";
 import { UrlBuilder } from "./url.builder";
 import {
   PATH_VARIABLE_METADATA,
   REQUEST_BODY_METADATA,
+  REQUEST_FORM_METADATA,
   REQUEST_PARAM_METADATA,
 } from "../decorators";
 import { type HttpMethod } from "../types/http-method";
 
 export class HttpRequestBuilder {
   private baseUrl = "";
-  private readonly pathVariableBuilder: PathVariableBuilder | undefined;
-  private readonly requestParamBuilder: RequestParamBuilder | undefined;
-  private readonly requestBodyBuilder: RequestBodyBuilder | undefined;
+  private readonly pathVariableBuilder?: PathVariableBuilder;
+  private readonly requestParamBuilder?: RequestParamBuilder;
+  private readonly requestBodyBuilder?: RequestBodyBuilder;
+  private readonly requestFormBuilder?: RequestFormBuilder;
 
   constructor(
     readonly target: object,
@@ -24,6 +27,7 @@ export class HttpRequestBuilder {
     this.pathVariableBuilder = this.getMetadata(PATH_VARIABLE_METADATA);
     this.requestParamBuilder = this.getMetadata(REQUEST_PARAM_METADATA);
     this.requestBodyBuilder = this.getMetadata(REQUEST_BODY_METADATA);
+    this.requestFormBuilder = this.getMetadata(REQUEST_FORM_METADATA);
   }
 
   setBaseUrl(baseUrl: string): void {
@@ -31,11 +35,16 @@ export class HttpRequestBuilder {
   }
 
   build(args: any[]): Request {
-    const payload = this.requestBodyBuilder?.build(args);
-    const urlBuilder = new UrlBuilder(this.baseUrl, this.url, args, {
-      pathParam: this.pathVariableBuilder,
-      queryParam: this.requestParamBuilder,
-    });
+    const payload =
+      this.requestBodyBuilder?.build(args) ??
+      this.requestFormBuilder?.build(args);
+    const urlBuilder = new UrlBuilder(
+      this.baseUrl,
+      this.url,
+      args,
+      this.pathVariableBuilder,
+      this.requestParamBuilder
+    );
 
     return new Request(urlBuilder.build(), {
       method: this.method,
