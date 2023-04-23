@@ -1,6 +1,7 @@
 /.idea
 /.husky
 /coverage
+/.github
 /lib
 .eslintrc.yml
 .gitignore
