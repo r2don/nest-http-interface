@@ -8,7 +8,7 @@ import {
   HTTP_INTERFACE_METADATA,
   RESPONSE_BODY_METADATA,
 } from '../decorators';
-import { HttpClient } from '../types/http-client.interface';
+import { HttpClient } from '../types';
 
 @Injectable()
 export class NodeFetchInjector implements OnModuleInit {
@@ -71,8 +71,11 @@ export class NodeFetchInjector implements OnModuleInit {
       .getProviders()
       .filter(
         (wrapper) =>
-          Reflect.getMetadata(HTTP_INTERFACE_METADATA, wrapper.metatype) ==
-          null,
+          wrapper.metatype?.prototype != null &&
+          Reflect.hasMetadata(
+            HTTP_INTERFACE_METADATA,
+            wrapper.metatype.prototype,
+          ),
       );
   }
 }
