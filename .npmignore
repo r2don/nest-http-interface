@@ -1,1 +1,13 @@
-/.github
+/.husky
+/coverage
+/lib
+.eslintrc.yml
+.gitignore
+.npmignore
+.prettierrc
+.release-it.json
+global.vitest.ts
+pnpm-lock.yaml
+tsconfig.json
+tsconfig.build.json
+vitest.config.ts

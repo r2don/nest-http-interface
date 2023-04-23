@@ -25,7 +25,8 @@
     "clean": "tsc --build --clean tsconfig.build.json",
     "test": "vitest run",
     "coverage": "vitest run --coverage",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "release": "release-it"
   },
   "devDependencies": {
     "@nestjs/common": "^9.4.0",
@@ -45,6 +46,7 @@
     "lint-staged": "^13.2.1",
     "prettier": "^2.8.7",
     "reflect-metadata": "^0.1.13",
+    "release-it": "^15.10.1",
     "typescript": "^5.0.4",
     "vitest": "^0.30.1"
   },
