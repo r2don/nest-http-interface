@@ -12,6 +12,7 @@ import {
   PutExchange,
   RequestBody,
   RequestForm,
+  RequestHeader,
   RequestParam,
 } from './decorators';
 import { StubDiscoveryService } from './fixtures/stub-discovery.service';
@@ -288,5 +289,49 @@ describe('NodeFetchInjector', () => {
     expect(httpClient.requestInfo[0].headers.get('Content-Type')).toBe(
       'application/x-www-form-urlencoded',
     );
+  });
+
+  test('should include header provided with key', async () => {
+    // given
+    @HttpInterface()
+    class SampleClient {
+      @GetExchange('https://example.com/api')
+      async request(@RequestHeader('Cookie') foo: string): Promise<string> {
+        return 'request';
+      }
+    }
+    const instance = discoveryService.addProvider(SampleClient);
+    httpClient.addResponse({ status: 'ok' });
+    nodeFetchInjector.onModuleInit();
+
+    // when
+    await instance.request('value');
+
+    // then
+    expect(httpClient.requestInfo).toHaveLength(1);
+    expect(httpClient.requestInfo[0].headers.get('Cookie')).toBe('value');
+  });
+
+  test('should include header provided without key', async () => {
+    // given
+    @HttpInterface()
+    class SampleClient {
+      @GetExchange('https://example.com/api')
+      async request(
+        @RequestHeader() header: { Cookie: string },
+      ): Promise<string> {
+        return 'request';
+      }
+    }
+    const instance = discoveryService.addProvider(SampleClient);
+    httpClient.addResponse({ status: 'ok' });
+    nodeFetchInjector.onModuleInit();
+
+    // when
+    await instance.request({ Cookie: 'value' });
+
+    // then
+    expect(httpClient.requestInfo).toHaveLength(1);
+    expect(httpClient.requestInfo[0].headers.get('Cookie')).toBe('value');
   });
 });
