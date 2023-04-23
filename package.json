@@ -1,6 +1,6 @@
 {
   "name": "@r2don/nest-http-interface",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "maintainers": [
     {
@@ -20,7 +20,7 @@
   },
   "homepage": "https://github.com/r2don/nest-http-interface#readme",
   "main": "dist/index.js",
-  "types" : "dist/index.d.ts",
+  "types": "dist/index.d.ts",
   "scripts": {
     "format": "eslint --fix ./lib",
     "build": "tsc --build --verbose tsconfig.build.json",
