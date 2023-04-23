@@ -31,5 +31,6 @@ describe('HttpInterfaceModule', () => {
 
     // then
     expect(response).toBe('{"data":"ok"}');
+    await app.close();
   });
 });

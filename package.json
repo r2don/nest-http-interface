@@ -24,6 +24,7 @@
     "build": "tsc --build --verbose tsconfig.build.json",
     "clean": "tsc --build --clean tsconfig.build.json",
     "test": "vitest run",
+    "coverage": "vitest run --coverage",
     "prepare": "husky install"
   },
   "devDependencies": {

@@ -27,11 +27,7 @@ export class NodeFetchInjector implements OnModuleInit {
         wrapper.metatype.prototype,
       );
 
-      if (baseUrl == null) {
-        return;
-      }
-
-      this.wrapMethods(wrapper, baseUrl);
+      this.wrapMethods(wrapper, baseUrl ?? '');
     });
   }
 

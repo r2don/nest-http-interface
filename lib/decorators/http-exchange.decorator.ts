@@ -1,14 +1,12 @@
 import { HTTP_EXCHANGE_METADATA } from './constants';
 import { HttpRequestBuilder } from '../builders/http-request.builder';
-import { type HttpMethod } from '../types/http-method';
+import { type HttpMethod } from '../types';
 
 type AsyncFunction = (...args: any[]) => Promise<unknown>;
 
-export function HttpExchange(method: HttpMethod, url: string) {
-  return function <P extends string>(
-    target: Record<P, AsyncFunction>,
-    propertyKey: P,
-  ) {
+export const HttpExchange =
+  (method: HttpMethod, url: string) =>
+  <P extends string>(target: Record<P, AsyncFunction>, propertyKey: P) => {
     Reflect.defineMetadata(
       HTTP_EXCHANGE_METADATA,
       new HttpRequestBuilder(target, propertyKey, method, url),
@@ -16,7 +14,6 @@ export function HttpExchange(method: HttpMethod, url: string) {
       propertyKey,
     );
   };
-}
 
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 export const GetExchange = (url = '') => HttpExchange('GET', url);
