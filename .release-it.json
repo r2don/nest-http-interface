@@ -7,5 +7,9 @@
   },
   "publishConfig": {
     "access": "public"
+  },
+  "hooks": {
+    "before:init": ["npm run format", "npm test"],
+    "after:bump": "npm run build"
   }
 }

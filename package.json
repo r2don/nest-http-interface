@@ -21,6 +21,7 @@
   "homepage": "https://github.com/r2don/nest-http-interface#readme",
   "main": "index.js",
   "scripts": {
+    "format": "eslint --fix ./lib",
     "build": "tsc --build --verbose tsconfig.build.json",
     "clean": "tsc --build --clean tsconfig.build.json",
     "test": "vitest run",

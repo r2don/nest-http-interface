@@ -25,3 +25,4 @@ rules:
         order: asc
         caseInsensitive: true
   '@typescript-eslint/no-extraneous-class': 0
+  '@typescript-eslint/no-explicit-any': 0
