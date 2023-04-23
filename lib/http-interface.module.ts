@@ -1,6 +1,6 @@
 import { type DynamicModule } from '@nestjs/common';
 import { DiscoveryModule } from '@nestjs/core';
-import { NodeFetchInjector } from './node-fetch.injector';
+import { NodeFetchInjector } from './supports/node-fetch.injector';
 
 export interface HttpInterfaceConfig {
   timeout?: number;
