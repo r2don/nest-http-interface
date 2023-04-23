@@ -1,9 +1,14 @@
 import { Injectable, type OnModuleInit } from '@nestjs/common';
 import { DiscoveryService, MetadataScanner } from '@nestjs/core';
 import { type InstanceWrapper } from '@nestjs/core/injector/instance-wrapper';
-import { type HttpRequestBuilder } from './builders/http-request.builder';
-import { HTTP_EXCHANGE_METADATA, HTTP_INTERFACE_METADATA } from './decorators';
-import { HttpClient } from './types/http-client.interface';
+import { type HttpRequestBuilder } from '../builders/http-request.builder';
+import { type ResponseBodyBuilder } from '../builders/response-body.builder';
+import {
+  HTTP_EXCHANGE_METADATA,
+  HTTP_INTERFACE_METADATA,
+  RESPONSE_BODY_METADATA,
+} from '../decorators';
+import { HttpClient } from '../types/http-client.interface';
 
 @Injectable()
 export class NodeFetchInjector implements OnModuleInit {
@@ -41,12 +46,23 @@ export class NodeFetchInjector implements OnModuleInit {
         return;
       }
 
+      const responseBodyBuilder: ResponseBodyBuilder<unknown> | undefined =
+        Reflect.getMetadata(RESPONSE_BODY_METADATA, prototype, methodName);
+
       httpRequestBuilder.setBaseUrl(baseUrl);
 
       wrapper.instance[methodName] = async (...args: never[]) =>
         await this.httpClient
           .request(httpRequestBuilder.build(args))
-          .then(async (response) => await response.json());
+          .then(async (response) => {
+            if (responseBodyBuilder != null) {
+              const res = await response.json();
+
+              return responseBodyBuilder.build(res);
+            }
+
+            return await response.text();
+          });
     });
   }
 

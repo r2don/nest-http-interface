@@ -1,5 +1,7 @@
 import { MetadataScanner } from '@nestjs/core';
 import { beforeEach, describe, test, expect } from 'vitest';
+import { imitation } from './imitation';
+import { NodeFetchInjector } from './node-fetch.injector';
 import {
   DeleteExchange,
   GetExchange,
@@ -14,10 +16,10 @@ import {
   RequestForm,
   RequestHeader,
   RequestParam,
-} from './decorators';
-import { StubDiscoveryService } from './fixtures/stub-discovery.service';
-import { StubHttpClient } from './fixtures/stub-http-client';
-import { NodeFetchInjector } from './node-fetch.injector';
+} from '../decorators';
+import { ResponseBody } from '../decorators/response-body.decorator';
+import { StubDiscoveryService } from '../fixtures/stub-discovery.service';
+import { StubHttpClient } from '../fixtures/stub-http-client';
 
 describe('NodeFetchInjector', () => {
   const metadataScanner = new MetadataScanner();
@@ -333,5 +335,50 @@ describe('NodeFetchInjector', () => {
     // then
     expect(httpClient.requestInfo).toHaveLength(1);
     expect(httpClient.requestInfo[0].headers.get('Cookie')).toBe('value');
+  });
+
+  test('should response text if there is no response body decorator', async () => {
+    // given
+    @HttpInterface()
+    class SampleClient {
+      @GetExchange('https://example.com/api')
+      async request(): Promise<string> {
+        return 'request';
+      }
+    }
+    const instance = discoveryService.addProvider(SampleClient);
+    httpClient.addResponse({ status: 'ok' });
+    nodeFetchInjector.onModuleInit();
+
+    // when
+    const result = await instance.request();
+
+    // then
+    expect(result).toBe('{"status":"ok"}');
+  });
+
+  test('should response instance provided with response body decorator', async () => {
+    // given
+    class ResponseTest {
+      constructor(readonly value: string) {}
+    }
+    @HttpInterface()
+    class SampleClient {
+      @GetExchange('https://example.com/api')
+      @ResponseBody(ResponseTest)
+      async request(): Promise<ResponseTest> {
+        return imitation();
+      }
+    }
+    const instance = discoveryService.addProvider(SampleClient);
+    httpClient.addResponse({ value: 'ok' });
+    nodeFetchInjector.onModuleInit();
+
+    // when
+    const result = await instance.request();
+
+    // then
+    expect(result).toBeInstanceOf(ResponseTest);
+    expect(result.value).toBe('ok');
   });
 });
