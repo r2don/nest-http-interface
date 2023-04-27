@@ -6,6 +6,13 @@
 
 This library is inspired by the HTTP interface in Spring 6 and provides a similar API for Nest.js.
 
+## Features
+
+- Provides a simplified and declarative way of creating HTTP services.
+- Provides a concise syntax for handling query parameters, path variables, request headers, request bodies, and forms.
+- Offers integration with [class-transformer](https://github.com/typestack/class-transformer) to facilitate data transformation.
+- Uses promises instead of observables
+
 ## Requirements
 
 - Node.js 18 or later (because this library uses `fetch` internally)
@@ -65,63 +72,23 @@ export class AppModule {
 
 ## Decorators
 
-- `@HttpInterface()`
+- `@HttpInterface()`: Marks the class as an HTTP service.
+ 
+- `@{HTTP Method}Exchange(path: string)`: Marks the method as an HTTP request method, with `path` being the request's path or full URL.
+ 
+- `@ResponseBody(dto: ClassConstructor, options?: ClassTransformOptions)`: Specifies the response DTO using a class constructor and options from the `class-transformer` library.
+ 
+- `@PathVariable(name?: string)`: Specifies the path variable, requiring the name of the variable.
+ 
+- `@RequestParam(key?: string)`: Specifies the query string parameter, requiring the key of the parameter. If `key` is not specified, the parameter must be an object. See examples below:
+    - Example with key: `request(@RequestParam('foo') query: string): string`
+    - Example without key: `request(@RequestParam() query: { foo: string }): string`
 
-This decorator is used to mark the class as an HTTP service.
+- `@RequestHeader(key?: string)`: Specifies the request header, requiring the key of the header optionally.
 
-- `@{HTTP Method}Exchange(path: string)`
+- `@RequestBody(key?: string)`: Specifies the request body using `application/json` as the content type, requiring the key of the body optionally.
 
-These decorators are used to mark the method as an HTTP request method.
-`path` is the path or full URL of the request.
-
-- `@ResponseBody(dto: ClassConstructor, options?: ClassTransformOptions)`
-
-This decorator is used to specify the response DTO.
-It requires a class constructor and options from `class-transformer` library.
-
-- `@PathVariable(name?: string)`
-
-This decorator is used to specify the path variable.
-It requires the name of the path variable.
-
-- `@RequestParam(key?: string)`
-
-This decorator is used to specify the query string parameter.
-It requires the key of query string parameter.
-If `key` is not specified, it requires the parameter to be an object.
-
-```ts
-// with key
-class TestService {
-  request(@RequestParam('foo') query: string): string {
-    return imitation();
-  }
-}
-
-// without key
-class TestService {
-  request(@RequestParam() query: { foo: string }): string {
-    return imitation();
-  }
-}
-```
-
-- `@RequestHeader(key?: string)`
-
-This decorator is used to specify the request header.
-It requires the key of request header optionally.
-
-- `@RequestBody(key?: string)`
-
-This decorator is used to specify the request body.
-`application/json` is used as the content type.
-It requires the key of request body optionally.
-
-- `@RequestForm(key?: string)`
-
-This decorator is used to specify the request form.
-`application/x-www-form-urlencoded` is used as the content type.
-It requires the key of request body optionally.
+- `@RequestForm(key?: string)`: Specifies the request form using `application/x-www-form-urlencoded` as the content type, requiring the key of the body optionally.
 
 ## License
 
