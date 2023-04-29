@@ -22,12 +22,12 @@ export class NodeFetchInjector implements OnModuleInit {
     const httpProviders = this.getHttpProviders();
 
     httpProviders.forEach((wrapper) => {
-      const baseUrl: string | undefined = Reflect.getMetadata(
+      const baseUrl: string = Reflect.getMetadata(
         HTTP_INTERFACE_METADATA,
         wrapper.metatype.prototype,
       );
 
-      this.wrapMethods(wrapper, baseUrl ?? '');
+      this.wrapMethods(wrapper, baseUrl);
     });
   }
 

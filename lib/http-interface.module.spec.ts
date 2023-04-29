@@ -4,6 +4,9 @@ import { GetExchange, HttpInterface } from './decorators';
 import { StubHttpClient } from './fixtures/stub-http-client';
 import { HttpInterfaceModule } from './http-interface.module';
 import { imitation } from './supports';
+import { FetchHttpClient } from './supports/fetch-http-client';
+import { NodeFetchInjector } from './supports/node-fetch.injector';
+import { type HttpClient } from './types';
 
 describe('HttpInterfaceModule', () => {
   @HttpInterface('http://localhost:3000')
@@ -13,6 +16,21 @@ describe('HttpInterfaceModule', () => {
       return imitation();
     }
   }
+
+  test('should use default http client if not given', async () => {
+    // given
+    const module = await Test.createTestingModule({
+      imports: [HttpInterfaceModule.register()],
+    }).compile();
+    await module.init();
+    const app = module.createNestApplication();
+
+    // when
+    const injector = app.get<{ httpClient: HttpClient }>(NodeFetchInjector);
+
+    // then
+    expect(injector.httpClient).toBeInstanceOf(FetchHttpClient);
+  });
 
   test('should request with given client', async () => {
     // given
