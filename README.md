@@ -13,6 +13,7 @@ This library is inspired by the HTTP interface in Spring 6 and provides a simila
 ## Features
 
 - Provides a simplified and declarative way of creating HTTP services.
+- Supports both REST and GraphQL requests.
 - Provides a concise syntax for handling query parameters, path variables, request headers, request bodies, and forms.
 - Offers integration with [class-transformer](https://github.com/typestack/class-transformer) to facilitate data
   transformation.
@@ -81,6 +82,9 @@ export class AppModule {
 
 - `@{HTTP Method}Exchange(path: string)`: Marks the method as an HTTP request method, with `path` being the request's
   path or full URL.
+
+- `@GraphQLExchange(query: string, url = '/graphql')`: Marks the method as a GraphQL request method, with `query` being
+  the GraphQL query and `url` being the GraphQL endpoint.
 
 - `@ResponseBody(dto: ClassConstructor, options?: ClassTransformOptions)`: Specifies the response DTO using a class
   constructor and options from the `class-transformer` library.
