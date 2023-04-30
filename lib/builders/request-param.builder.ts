@@ -2,21 +2,26 @@ import querystring from 'node:querystring';
 import { TupleArrayBuilder } from './tuple-array.builder';
 
 export class RequestParamBuilder {
-  metadata: Array<[index: number, key: string | undefined]> = [];
+  metadata: Array<
+    [
+      index: number,
+      value: [key: string | undefined, defaultValue: string | undefined],
+    ]
+  > = [];
 
-  constructor(index: number, key?: string) {
-    this.add(index, key);
+  constructor(index: number, key?: string, defaultValue?: string) {
+    this.add(index, key, defaultValue);
   }
 
-  add(index: number, key?: string): void {
-    this.metadata.push([index, key]);
+  add(index: number, key?: string, defaultValue?: string): void {
+    this.metadata.push([index, [key, defaultValue]]);
   }
 
   build(args: any[]): string {
     const result = this.metadata.reduce<Record<string, any>>(
-      (acc, [index, key]) => {
+      (acc, [index, [key, defaultValue]]) => {
         if (key != null) {
-          acc[key] = String(args[index]);
+          acc[key] = String(args[index] ?? defaultValue ?? '');
           return acc;
         }
 

@@ -40,7 +40,7 @@ describe('RequestParam', () => {
 
     // then
     expect(result.metadata).toHaveLength(1);
-    expect(result.metadata[0]).toEqual([0, undefined]);
+    expect(result.metadata[0]).toEqual([0, [undefined, undefined]]);
   });
 
   test('should set request param metadata with key', () => {
@@ -60,14 +60,14 @@ describe('RequestParam', () => {
 
     // then
     expect(result.metadata).toHaveLength(1);
-    expect(result.metadata[0]).toEqual([1, 'bar']);
+    expect(result.metadata[0]).toEqual([1, ['bar', undefined]]);
   });
 
   test('should set request param metadata with multiple decorator', () => {
     // given
     class TestService {
       request(
-        @RequestParam('foo') foo: string,
+        @RequestParam('foo', 'default') foo: string,
         @RequestParam() bar: { bar: string },
       ): string {
         return foo;
@@ -83,8 +83,8 @@ describe('RequestParam', () => {
 
     // then
     expect(result.metadata).toEqual([
-      [1, undefined],
-      [0, 'foo'],
+      [1, [undefined, undefined]],
+      [0, ['foo', 'default']],
     ]);
   });
 });

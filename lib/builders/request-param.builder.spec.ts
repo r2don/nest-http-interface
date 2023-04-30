@@ -14,6 +14,18 @@ describe('RequestParamBuilder', () => {
     expect(actual).toBe('?keyword=search');
   });
 
+  test('should build query string with explicit key and default', () => {
+    // given
+    const builder = new RequestParamBuilder(0, 'keyword', 'default');
+    const args = [null];
+
+    // when
+    const actual = builder.build(args);
+
+    // then
+    expect(actual).toBe('?keyword=default');
+  });
+
   test('should build query string without key', () => {
     // given
     const builder = new RequestParamBuilder(1);
