@@ -14,7 +14,8 @@ This library is inspired by the HTTP interface in Spring 6 and provides a simila
 
 - Provides a simplified and declarative way of creating HTTP services.
 - Provides a concise syntax for handling query parameters, path variables, request headers, request bodies, and forms.
-- Offers integration with [class-transformer](https://github.com/typestack/class-transformer) to facilitate data transformation.
+- Offers integration with [class-transformer](https://github.com/typestack/class-transformer) to facilitate data
+  transformation.
 - Uses promises instead of observables
 
 ## Requirements
@@ -77,22 +78,28 @@ export class AppModule {
 ## Decorators
 
 - `@HttpInterface()`: Marks the class as an HTTP service.
- 
-- `@{HTTP Method}Exchange(path: string)`: Marks the method as an HTTP request method, with `path` being the request's path or full URL.
- 
-- `@ResponseBody(dto: ClassConstructor, options?: ClassTransformOptions)`: Specifies the response DTO using a class constructor and options from the `class-transformer` library.
- 
+
+- `@{HTTP Method}Exchange(path: string)`: Marks the method as an HTTP request method, with `path` being the request's
+  path or full URL.
+
+- `@ResponseBody(dto: ClassConstructor, options?: ClassTransformOptions)`: Specifies the response DTO using a class
+  constructor and options from the `class-transformer` library.
+
 - `@PathVariable(name?: string)`: Specifies the path variable, requiring the name of the variable.
- 
-- `@RequestParam(key?: string)`: Specifies the query string parameter, requiring the key of the parameter. If `key` is not specified, the parameter must be an object. See examples below:
+
+- `@RequestParam(key?: string, defaultValue?: string)`: Specifies the query string parameter, requiring the key of the
+  parameter. If `key` is not specified, the parameter must be an object. See examples below:
     - Example with key: `request(@RequestParam('foo') query: string): string`
     - Example without key: `request(@RequestParam() query: { foo: string }): string`
 
-- `@RequestHeader(key?: string)`: Specifies the request header, requiring the key of the header optionally.
+- `@RequestHeader(key?: string, defaultValue?: string)`: Specifies the request header, requiring the key of the header
+  optionally.
 
-- `@RequestBody(key?: string)`: Specifies the request body using `application/json` as the content type, requiring the key of the body optionally.
+- `@RequestBody(key?: string, defalutValue?: unkown)`: Specifies the request body using `application/json` as the
+  content type, requiring the key of the body optionally.
 
-- `@RequestForm(key?: string)`: Specifies the request form using `application/x-www-form-urlencoded` as the content type, requiring the key of the body optionally.
+- `@RequestForm(key?: string, defaultValue?: string)`: Specifies the request form
+  using `application/x-www-form-urlencoded` as the content type, requiring the key of the body optionally.
 
 ## License
 
