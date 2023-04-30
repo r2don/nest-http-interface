@@ -1,6 +1,11 @@
 import { REQUEST_BODY_METADATA } from './constants';
 import { RequestBodyBuilder } from '../builders/request-body.builder';
 
+export function RequestBody(key?: string): ParameterDecorator;
+export function RequestBody(
+  key: string,
+  defaultValue?: unknown,
+): ParameterDecorator;
 export function RequestBody(
   key?: string,
   defaultValue?: unknown,

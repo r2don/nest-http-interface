@@ -1,6 +1,11 @@
 import { REQUEST_FORM_METADATA } from './constants';
 import { RequestFormBuilder } from '../builders/request-form.builder';
 
+export function RequestForm(key?: string): ParameterDecorator;
+export function RequestForm(
+  key: string,
+  defaultValue?: string,
+): ParameterDecorator;
 export function RequestForm(
   key?: string,
   defaultValue?: string,

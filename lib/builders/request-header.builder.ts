@@ -1,30 +1,27 @@
 import { TupleArrayBuilder } from './tuple-array.builder';
+import { type ParamDecoratorOption } from '../types/param-decorator-option.interface';
 
 export class RequestHeaderBuilder {
-  metadata: Array<
-    [
-      index: number,
-      value: [key: string | undefined, defaultValue: string | undefined],
-    ]
-  > = [];
+  metadata: Array<ParamDecoratorOption<string, string>> = [];
 
-  constructor(index: number, key?: string, defaultValue?: string) {
-    this.add(index, key, defaultValue);
+  constructor(option: ParamDecoratorOption<string, string>) {
+    this.add(option);
   }
 
-  add(index: number, key?: string, defaultValue?: string): void {
-    this.metadata.push([index, [key, defaultValue]]);
+  add(option: ParamDecoratorOption<string, string>): void {
+    this.metadata.push(option);
   }
 
   build(args: any[]): HeadersInit {
     return this.metadata.reduce<Record<string, string>>(
-      (acc, [index, [key, defaultValue]]) => {
+      (acc, { parameterIndex, key, defaultValue, transform }) => {
         if (key != null) {
-          acc[key] = String(args[index] ?? defaultValue ?? '');
+          const value = String(args[parameterIndex] ?? defaultValue ?? '');
+          acc[key] = transform != null ? transform(value) : value;
           return acc;
         }
 
-        TupleArrayBuilder.of<string, unknown>(args[index]).forEach(
+        TupleArrayBuilder.of<string, unknown>(args[parameterIndex]).forEach(
           ([key, value]) => {
             acc[key] = String(value);
           },

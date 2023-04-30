@@ -382,13 +382,13 @@ describe('NodeFetchInjector', () => {
     expect(result.value).toBe('ok');
   });
 
-  test('should use default parameter value', async () => {
+  test('should use default value option', async () => {
     // given
     @HttpInterface()
     class SampleClient {
       @GetExchange('https://example.com/api')
       async request(
-        @RequestHeader('Cookie', 'bar') foo?: string,
+        @RequestHeader('Cookie', { defaultValue: 'bar' }) foo?: string,
       ): Promise<string> {
         return imitation();
       }
@@ -403,5 +403,29 @@ describe('NodeFetchInjector', () => {
     // then
     expect(httpClient.requestInfo).toHaveLength(1);
     expect(httpClient.requestInfo[0].headers.get('Cookie')).toBe('bar');
+  });
+
+  test('should use transform function', async () => {
+    // given
+    @HttpInterface()
+    class SampleClient {
+      @GetExchange('https://example.com/api')
+      async request(
+        @RequestHeader('Cookie', { transform: (value) => value.toUpperCase() })
+        foo: string,
+      ): Promise<string> {
+        return imitation();
+      }
+    }
+    const instance = discoveryService.addProvider(SampleClient);
+    httpClient.addResponse({ status: 'ok' });
+    nodeFetchInjector.onModuleInit();
+
+    // when
+    await instance.request('bar');
+
+    // then
+    expect(httpClient.requestInfo).toHaveLength(1);
+    expect(httpClient.requestInfo[0].headers.get('Cookie')).toBe('BAR');
   });
 });

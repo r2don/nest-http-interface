@@ -1,7 +1,7 @@
-import { type HttpClient } from '../types/http-client.interface';
+import { type HttpClient } from '../types';
 
 export class FetchHttpClient implements HttpClient {
-  #timeout: number;
+  readonly #timeout: number;
 
   constructor(timeout: number) {
     this.#timeout = timeout;

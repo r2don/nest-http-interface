@@ -6,3 +6,4 @@ export * from './request-header.decorator';
 export * from './request-param.decorator';
 export * from './request-form.decorator';
 export * from './constants';
+export * from './utils';

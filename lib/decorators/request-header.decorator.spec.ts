@@ -40,7 +40,14 @@ describe('RequestHeader', () => {
     );
 
     // then
-    expect(result.metadata).toEqual([[0, [undefined, undefined]]]);
+    expect(result.metadata).toMatchInlineSnapshot(`
+      [
+        {
+          "key": undefined,
+          "parameterIndex": 0,
+        },
+      ]
+    `);
   });
 
   test('should set request header metadata with key', () => {
@@ -59,14 +66,21 @@ describe('RequestHeader', () => {
     );
 
     // then
-    expect(result.metadata).toEqual([[0, ['foo', undefined]]]);
+    expect(result.metadata).toMatchInlineSnapshot(`
+      [
+        {
+          "key": "foo",
+          "parameterIndex": 0,
+        },
+      ]
+    `);
   });
 
   test('should set request header metadata with multiple decorator', () => {
     // given
     class TestService {
       request(
-        @RequestHeader('foo', 'default') foo: string,
+        @RequestHeader('foo', { defaultValue: 'default' }) foo: string,
         @RequestHeader() bar: { bar: string },
       ): string {
         return foo;
@@ -81,9 +95,18 @@ describe('RequestHeader', () => {
     );
 
     // then
-    expect(result.metadata).toEqual([
-      [1, [undefined, undefined]],
-      [0, ['foo', 'default']],
-    ]);
+    expect(result.metadata).toMatchInlineSnapshot(`
+      [
+        {
+          "key": undefined,
+          "parameterIndex": 1,
+        },
+        {
+          "defaultValue": "default",
+          "key": "foo",
+          "parameterIndex": 0,
+        },
+      ]
+    `);
   });
 });
