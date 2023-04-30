@@ -1,8 +1,6 @@
 import { HTTP_EXCHANGE_METADATA } from './constants';
 import { HttpRequestBuilder } from '../builders/http-request.builder';
-import { type HttpMethod } from '../types';
-
-type AsyncFunction = (...args: any[]) => Promise<unknown>;
+import { type AsyncFunction, type HttpMethod } from '../types';
 
 export const HttpExchange =
   (method: HttpMethod, url: string) =>
