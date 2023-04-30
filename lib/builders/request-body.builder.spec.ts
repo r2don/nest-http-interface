@@ -37,4 +37,23 @@ describe('RequestBodyBuilder', () => {
     // then
     expect(actual).toBe('{"foo":"bar"}');
   });
+
+  test('should include gql query', () => {
+    // given
+    const builder = new RequestBodyBuilder(0, 'name');
+    const args = ['param'];
+    const gqlQuery = /* GraphQL */ `
+      query hello($name: String!) {
+        hello(name: $name)
+      }
+    `;
+
+    // when
+    const actual = builder.build(args, gqlQuery);
+
+    // then
+    expect(actual).toBe(
+      JSON.stringify({ query: gqlQuery, variables: { name: 'param' } }),
+    );
+  });
 });

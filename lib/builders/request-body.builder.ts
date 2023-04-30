@@ -13,7 +13,7 @@ export class RequestBodyBuilder {
     this.metadata.push([index, [key, defaultValue]]);
   }
 
-  build(args: any[]): string {
+  build(args: any[], gqlQuery?: string): string {
     const result = this.metadata.reduce<Record<string, any>>(
       (acc, [index, [key, defaultValue]]) => {
         if (key != null) {
@@ -32,6 +32,8 @@ export class RequestBodyBuilder {
       {},
     );
 
-    return JSON.stringify(result);
+    return JSON.stringify(
+      gqlQuery != null ? { query: gqlQuery, variables: result } : result,
+    );
   }
 }

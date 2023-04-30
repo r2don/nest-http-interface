@@ -17,6 +17,7 @@ import {
   RequestHeader,
   RequestParam,
 } from '../decorators';
+import { GraphQLExchange } from '../decorators/graphql-exchange.decorator';
 import { ResponseBody } from '../decorators/response-body.decorator';
 import { StubDiscoveryService } from '../fixtures/stub-discovery.service';
 import { StubHttpClient } from '../fixtures/stub-http-client';
@@ -427,5 +428,37 @@ describe('NodeFetchInjector', () => {
     // then
     expect(httpClient.requestInfo).toHaveLength(1);
     expect(httpClient.requestInfo[0].headers.get('Cookie')).toBe('BAR');
+  });
+
+  test('should make graphql request', async () => {
+    // given
+    const query = /* GraphQL */ `
+      query hello($name: String!) {
+        hello(name: $name)
+      }
+    `;
+    @HttpInterface('https://example.com')
+    class SampleClient {
+      @GraphQLExchange(query)
+      async request(
+        @RequestBody() body: Record<string, unknown>,
+      ): Promise<string> {
+        return 'request';
+      }
+    }
+
+    const instance = discoveryService.addProvider(SampleClient);
+    httpClient.addResponse({ status: 'ok' });
+    nodeFetchInjector.onModuleInit();
+
+    // when
+    await instance.request({ name: 'int' });
+
+    // then
+    expect(httpClient.requestInfo).toHaveLength(1);
+    expect(await httpClient.requestInfo[0].json()).toEqual({
+      query,
+      variables: { name: 'int' },
+    });
   });
 });

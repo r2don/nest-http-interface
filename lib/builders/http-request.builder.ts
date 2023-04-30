@@ -47,7 +47,7 @@ export class HttpRequestBuilder {
       this.pathVariableBuilder,
       this.requestParamBuilder,
     );
-    const payload = this.payloadBuilder.build(args);
+    const payload = this.payloadBuilder.build(args, this.gqlQuery);
     const headers = this.requestHeaderBuilder?.build(args);
 
     return new Request(urlBuilder.build(), {

@@ -19,9 +19,9 @@ export class PayloadBuilder {
     return undefined;
   }
 
-  build(args: any[]): BodyInit | undefined {
+  build(args: any[], gqlQuery?: string): BodyInit | undefined {
     return (
-      this.requestBodyBuilder?.build(args) ??
+      this.requestBodyBuilder?.build(args, gqlQuery) ??
       this.requestFormBuilder?.build(args)
     );
   }
