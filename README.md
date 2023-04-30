@@ -64,7 +64,7 @@ the `request` method:
 
 ```ts
 import {Module} from '@nestjs/common';
-import {HttpInterfaceModule} from '@your-namespace/http-interface';
+import {HttpInterfaceModule} from '@r2don/http-interface';
 import {SampleClient} from './sample.client';
 
 @Module({
