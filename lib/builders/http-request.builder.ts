@@ -32,6 +32,7 @@ export class HttpRequestBuilder {
     this.payloadBuilder = new PayloadBuilder(
       this.getMetadata(REQUEST_BODY_METADATA),
       this.getMetadata(REQUEST_FORM_METADATA),
+      gqlQuery,
     );
   }
 
@@ -47,7 +48,7 @@ export class HttpRequestBuilder {
       this.pathVariableBuilder,
       this.requestParamBuilder,
     );
-    const payload = this.payloadBuilder.build(args, this.gqlQuery);
+    const payload = this.payloadBuilder.build(args);
     const headers = this.requestHeaderBuilder?.build(args);
 
     return new Request(urlBuilder.build(), {

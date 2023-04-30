@@ -5,10 +5,11 @@ export class PayloadBuilder {
   constructor(
     private readonly requestBodyBuilder?: RequestBodyBuilder,
     private readonly requestFormBuilder?: RequestFormBuilder,
+    private readonly gqlQuery?: string,
   ) {}
 
   get contentType(): { 'Content-Type': string } | undefined {
-    if (this.requestBodyBuilder != null) {
+    if (this.gqlQuery != null || this.requestBodyBuilder != null) {
       return { 'Content-Type': 'application/json' };
     }
 
@@ -19,9 +20,13 @@ export class PayloadBuilder {
     return undefined;
   }
 
-  build(args: any[], gqlQuery?: string): BodyInit | undefined {
+  build(args: any[]): BodyInit | undefined {
+    if (this.gqlQuery != null && this.requestBodyBuilder == null) {
+      return JSON.stringify({ query: this.gqlQuery });
+    }
+
     return (
-      this.requestBodyBuilder?.build(args, gqlQuery) ??
+      this.requestBodyBuilder?.build(args, this.gqlQuery) ??
       this.requestFormBuilder?.build(args)
     );
   }

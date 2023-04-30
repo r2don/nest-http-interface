@@ -430,7 +430,37 @@ describe('NodeFetchInjector', () => {
     expect(httpClient.requestInfo[0].headers.get('Cookie')).toBe('BAR');
   });
 
-  test('should make graphql request', async () => {
+  test('should make graphql request without variables', async () => {
+    // given
+    const query = /* GraphQL */ `
+      query hello {
+        hello
+      }
+    `;
+    @HttpInterface('https://example.com')
+    class SampleClient {
+      @GraphQLExchange(query)
+      async request(): Promise<string> {
+        return 'request';
+      }
+    }
+
+    const instance = discoveryService.addProvider(SampleClient);
+    httpClient.addResponse({ status: 'ok' });
+    nodeFetchInjector.onModuleInit();
+
+    // when
+    await instance.request();
+
+    // then
+    expect(httpClient.requestInfo).toHaveLength(1);
+    expect(await httpClient.requestInfo[0].json()).toEqual({ query });
+    expect(httpClient.requestInfo[0].headers.get('Content-Type')).toBe(
+      'application/json',
+    );
+  });
+
+  test('should make graphql request with variables', async () => {
     // given
     const query = /* GraphQL */ `
       query hello($name: String!) {
@@ -460,5 +490,8 @@ describe('NodeFetchInjector', () => {
       query,
       variables: { name: 'int' },
     });
+    expect(httpClient.requestInfo[0].headers.get('Content-Type')).toBe(
+      'application/json',
+    );
   });
 });
