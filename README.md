@@ -92,8 +92,8 @@ export class AppModule {
     - Example with key: `request(@RequestParam('foo') query: string): string`
     - Example without key: `request(@RequestParam() query: { foo: string }): string`
 
-- `@RequestHeader(key?: string, defaultValue?: string)`: Specifies the request header, requiring the key of the header
-  optionally.
+- `@RequestHeader(key?: string, option?: { defaultValue?: string; transform?: (value: string) => string })`: Specifies
+  the request header, requiring the key of the header optionally.
 
 - `@Bearer()`: Specifies the bearer token using the `Authorization` header.
 
