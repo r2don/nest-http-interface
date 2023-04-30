@@ -17,6 +17,21 @@ describe('RequestHeaderBuilder', () => {
     expect(actual).toEqual({ keyword: 'search' });
   });
 
+  test('should ignore null value in args', () => {
+    // given
+    const builder = new RequestHeaderBuilder({
+      parameterIndex: 0,
+      key: 'keyword',
+    });
+    const args = [null];
+
+    // when
+    const actual = builder.build(args);
+
+    // then
+    expect(actual).toEqual({ keyword: '' });
+  });
+
   test('should build header with explicit key and default', () => {
     // given
     const builder = new RequestHeaderBuilder({
