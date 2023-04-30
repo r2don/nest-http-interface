@@ -95,6 +95,10 @@ export class AppModule {
 - `@RequestHeader(key?: string, defaultValue?: string)`: Specifies the request header, requiring the key of the header
   optionally.
 
+- `@Bearer()`: Specifies the bearer token using the `Authorization` header.
+
+- `@Cookie(key: string)`: Specifies the cookie using the `Cookie` header, requiring the key of the cookie.
+
 - `@RequestBody(key?: string, defalutValue?: unkown)`: Specifies the request body using `application/json` as the
   content type, requiring the key of the body optionally.
 
