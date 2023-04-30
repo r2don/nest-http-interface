@@ -381,4 +381,27 @@ describe('NodeFetchInjector', () => {
     expect(result).toBeInstanceOf(ResponseTest);
     expect(result.value).toBe('ok');
   });
+
+  test('should use default parameter value', async () => {
+    // given
+    @HttpInterface()
+    class SampleClient {
+      @GetExchange('https://example.com/api')
+      async request(
+        @RequestHeader('Cookie', 'bar') foo?: string,
+      ): Promise<string> {
+        return imitation();
+      }
+    }
+    const instance = discoveryService.addProvider(SampleClient);
+    httpClient.addResponse({ status: 'ok' });
+    nodeFetchInjector.onModuleInit();
+
+    // when
+    await instance.request();
+
+    // then
+    expect(httpClient.requestInfo).toHaveLength(1);
+    expect(httpClient.requestInfo[0].headers.get('Cookie')).toBe('bar');
+  });
 });

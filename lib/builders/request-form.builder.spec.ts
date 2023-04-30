@@ -14,6 +14,18 @@ describe('RequestFormBuilder', () => {
     expect([...actual.entries()]).toEqual([['keyword', 'search']]);
   });
 
+  test('should build form data with explicit key and default', () => {
+    // given
+    const builder = new RequestFormBuilder(0, 'keyword', 'search');
+    const args = [null];
+
+    // when
+    const actual = builder.build(args);
+
+    // then
+    expect([...actual.entries()]).toEqual([['keyword', 'search']]);
+  });
+
   test('should build form data without key', () => {
     // given
     const builder = new RequestFormBuilder(1);

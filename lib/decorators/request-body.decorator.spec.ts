@@ -40,7 +40,7 @@ describe('RequestBody', () => {
     );
 
     // then
-    expect(result.metadata).toEqual([[0, undefined]]);
+    expect(result.metadata).toEqual([[0, [undefined, undefined]]]);
   });
 
   test('should set request body metadata with key', () => {
@@ -59,14 +59,14 @@ describe('RequestBody', () => {
     );
 
     // then
-    expect(result.metadata).toEqual([[0, 'foo']]);
+    expect(result.metadata).toEqual([[0, ['foo', undefined]]]);
   });
 
   test('should set request body metadata with multiple decorator', () => {
     // given
     class TestService {
       request(
-        @RequestBody('foo') foo: string,
+        @RequestBody('foo', 'default') foo: string,
         @RequestBody() bar: { bar: string },
       ): string {
         return foo;
@@ -82,8 +82,8 @@ describe('RequestBody', () => {
 
     // then
     expect(result.metadata).toEqual([
-      [1, undefined],
-      [0, 'foo'],
+      [1, [undefined, undefined]],
+      [0, ['foo', 'default']],
     ]);
   });
 });

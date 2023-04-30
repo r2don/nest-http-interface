@@ -14,6 +14,18 @@ describe('RequestHeaderBuilder', () => {
     expect(actual).toEqual({ keyword: 'search' });
   });
 
+  test('should build header with explicit key and default', () => {
+    // given
+    const builder = new RequestHeaderBuilder(0, 'keyword', 'search');
+    const args = [null];
+
+    // when
+    const actual = builder.build(args);
+
+    // then
+    expect(actual).toEqual({ keyword: 'search' });
+  });
+
   test('should build header without key', () => {
     // given
     const builder = new RequestHeaderBuilder(1);

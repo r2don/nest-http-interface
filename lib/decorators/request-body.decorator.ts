@@ -1,7 +1,10 @@
 import { REQUEST_BODY_METADATA } from './constants';
 import { RequestBodyBuilder } from '../builders/request-body.builder';
 
-export function RequestBody(key?: string): ParameterDecorator {
+export function RequestBody(
+  key?: string,
+  defaultValue?: unknown,
+): ParameterDecorator {
   return (target, propertyKey, parameterIndex) => {
     if (propertyKey == null) {
       return;
@@ -14,13 +17,13 @@ export function RequestBody(key?: string): ParameterDecorator {
     );
 
     if (builder != null) {
-      builder.add(parameterIndex, key);
+      builder.add(parameterIndex, key, defaultValue);
       return;
     }
 
     Reflect.defineMetadata(
       REQUEST_BODY_METADATA,
-      new RequestBodyBuilder(parameterIndex, key),
+      new RequestBodyBuilder(parameterIndex, key, defaultValue),
       target,
       propertyKey,
     );
