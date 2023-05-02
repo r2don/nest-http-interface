@@ -20,7 +20,7 @@ describe('HttpInterfaceModule', () => {
   test('should use default http client if not given', async () => {
     // given
     const module = await Test.createTestingModule({
-      imports: [HttpInterfaceModule.register()],
+      imports: [HttpInterfaceModule.forRoot()],
     }).compile();
     await module.init();
     const app = module.createNestApplication();
@@ -36,7 +36,7 @@ describe('HttpInterfaceModule', () => {
     // given
     const httpClient = new StubHttpClient();
     const module = await Test.createTestingModule({
-      imports: [HttpInterfaceModule.register({ httpClient })],
+      imports: [HttpInterfaceModule.forRoot({ httpClient })],
       providers: [TestHttpService],
     }).compile();
     await module.init();
