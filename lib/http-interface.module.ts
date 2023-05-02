@@ -14,8 +14,9 @@ export interface HttpInterfaceConfig {
 }
 
 export class HttpInterfaceModule {
-  static register(config: HttpInterfaceConfig = {}): DynamicModule {
+  static forRoot(config: HttpInterfaceConfig = {}): DynamicModule {
     return {
+      global: true,
       imports: [DiscoveryModule],
       module: HttpInterfaceModule,
       providers: [
