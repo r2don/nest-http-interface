@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="http://nestjs.com"><img src="https://nestjs.com/img/logo_text.svg" alt="Nest Logo" width="320" /></a>
+  <a href="https://nestjs.com"><img src="https://nestjs.com/img/logo_text.svg" alt="Nest Logo" width="320" /></a>
 </p>
 
 # nest-http-interface
@@ -39,7 +39,7 @@ import {Module} from '@nestjs/common';
 import {HttpInterfaceModule} from '@r2don/nest-http-interface';
 
 @Module({
-  imports: [HttpInterfaceModule.register()],
+  imports: [HttpInterfaceModule.forRoot()],
 })
 export class AppModule {
 }
@@ -48,13 +48,13 @@ export class AppModule {
 Then, you need to create the desired HTTP service and specify several decorators:
 
 ```ts
-import {HttpInterface, GetExchange, ResponseBody, imitation} from '@r2don/nest-http-interface';
+import {HttpInterface, GetExchange, ResponseBody, imitation, PathVariable} from '@r2don/nest-http-interface';
 
-@HttpInterface()
-class SampleClient {
-  @GetExchange('https://example.com/api') // path or full url
-  @ResponseBody(ResponseTest) // response dto
-  async request(): Promise<ResponseTest> {
+@HttpInterface('https://example.com/api') // base url
+class UserHttpService {
+  @GetExchange('/users/{id}') // path
+  @ResponseBody(UserResponse) // response dto
+  async request(@PathVariable() id: number): Promise<UserResponse> {
     return imitation(); // this is a mock function to prevent the type error
   }
 }
@@ -64,15 +64,14 @@ After adding the service to the providers in the module, you can use it and make
 the `request` method:
 
 ```ts
-import {Module} from '@nestjs/common';
-import {HttpInterfaceModule} from '@r2don/http-interface';
-import {SampleClient} from './sample.client';
+@Injectable()
+class UserService {
+  constructor(private readonly client: UserHttpService) {
+  }
 
-@Module({
-  imports: [HttpInterfaceModule.register()],
-  providers: [SampleClient]
-})
-export class AppModule {
+  async getUser(id: number): Promise<UserResponse> {
+    return this.client.request(id);
+  }
 }
 ```
 
