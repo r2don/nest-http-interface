@@ -11,14 +11,7 @@ export const HttpExchange =
   <P extends string>(target: Record<P, AsyncFunction>, propertyKey: P) => {
     Reflect.defineMetadata(
       HTTP_EXCHANGE_METADATA,
-      new HttpRequestBuilder(
-        target,
-        propertyKey,
-        method,
-        url,
-        undefined,
-        options,
-      ),
+      HttpRequestBuilder.forRest(target, propertyKey, method, url, options),
       target,
       propertyKey,
     );

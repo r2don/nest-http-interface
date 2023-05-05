@@ -13,7 +13,7 @@ export function GraphQLExchange(
   ) => {
     Reflect.defineMetadata(
       HTTP_EXCHANGE_METADATA,
-      new HttpRequestBuilder(target, propertyKey, 'POST', url, query, options),
+      HttpRequestBuilder.forGraphQL(target, propertyKey, query, options, url),
       target,
       propertyKey,
     );

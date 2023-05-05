@@ -19,7 +19,7 @@ export class HttpRequestBuilder {
   private readonly requestHeaderBuilder?: RequestHeaderBuilder;
   private readonly payloadBuilder: PayloadBuilder;
 
-  constructor(
+  private constructor(
     readonly target: object,
     readonly propertyKey: string,
     readonly method: HttpMethod,
@@ -34,6 +34,40 @@ export class HttpRequestBuilder {
       this.getMetadata(REQUEST_BODY_METADATA),
       this.getMetadata(REQUEST_FORM_METADATA),
       gqlQuery,
+    );
+  }
+
+  static forRest(
+    target: object,
+    propertyKey: string,
+    method: HttpMethod,
+    url: string,
+    options?: HttpClientOptions,
+  ): HttpRequestBuilder {
+    return new HttpRequestBuilder(
+      target,
+      propertyKey,
+      method,
+      url,
+      undefined,
+      options,
+    );
+  }
+
+  static forGraphQL(
+    target: object,
+    propertyKey: string,
+    query: string,
+    options?: HttpClientOptions,
+    url = '/graphql',
+  ): HttpRequestBuilder {
+    return new HttpRequestBuilder(
+      target,
+      propertyKey,
+      'POST',
+      url,
+      query,
+      options,
     );
   }
 

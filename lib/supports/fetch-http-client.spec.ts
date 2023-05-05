@@ -12,7 +12,7 @@ describe('FetchHttpClient', () => {
   let fastify: FastifyInstance;
 
   beforeAll(async () => {
-    fastify = Fastify({ logger: false });
+    fastify = Fastify({ logger: false, forceCloseConnections: true });
 
     fastify.get('/', async (request, reply) => {
       await reply.send({ hello: 'world' });
@@ -115,13 +115,13 @@ describe('FetchHttpClient', () => {
     const address = fastify.server.address() as AddressInfo;
     const httpClient = new FetchHttpClient(60000);
     const request = new Request(`http://localhost:${address.port}/timeout`);
-    const httpClientOptions = { timeout: 300 };
+    const httpClientOptions = { timeout: 1000 };
 
     // when
     const doRequest = async (): Promise<Response> =>
       await httpClient.request(request, httpClientOptions);
 
     // then
-    await expect(doRequest).rejects.toThrowError('Request Timeout: 300ms');
+    await expect(doRequest).rejects.toThrowError('Request Timeout: 1000ms');
   });
 });
