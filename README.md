@@ -79,10 +79,10 @@ class UserService {
 
 - `@HttpInterface()`: Marks the class as an HTTP service.
 
-- `@{HTTP Method}Exchange(path: string)`: Marks the method as an HTTP request method, with `path` being the request's
+- `@{HTTP Method}Exchange(path: string, options?: HttpClientOptions)`: Marks the method as an HTTP request method, with `path` being the request's
   path or full URL.
 
-- `@GraphQLExchange(query: string, url = '/graphql')`: Marks the method as a GraphQL request method, with `query` being
+- `@GraphQLExchange(query: string, url = '/graphql', options?: HttpClientOptions)`: Marks the method as a GraphQL request method, with `query` being
   the GraphQL query and `url` being the GraphQL endpoint.
 
 - `@ResponseBody(dto: ClassConstructor, options?: ClassTransformOptions)`: Specifies the response DTO using a class
