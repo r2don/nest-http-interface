@@ -10,7 +10,7 @@ import {
   REQUEST_HEADER_METADATA,
   REQUEST_PARAM_METADATA,
 } from '../decorators';
-import { type HttpMethod } from '../types';
+import { type HttpClientOptions, type HttpMethod } from '../types';
 
 export class HttpRequestBuilder {
   private baseUrl = '';
@@ -25,6 +25,7 @@ export class HttpRequestBuilder {
     readonly method: HttpMethod,
     readonly url: string,
     readonly gqlQuery?: string,
+    readonly options?: HttpClientOptions,
   ) {
     this.pathVariableBuilder = this.getMetadata(PATH_VARIABLE_METADATA);
     this.requestParamBuilder = this.getMetadata(REQUEST_PARAM_METADATA);

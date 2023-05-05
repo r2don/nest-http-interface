@@ -109,4 +109,19 @@ describe('FetchHttpClient', () => {
     // then
     await expect(doRequest).rejects.toThrowError('Request Timeout: 3000ms');
   });
+
+  test('should use given option if provided', async () => {
+    // given
+    const address = fastify.server.address() as AddressInfo;
+    const httpClient = new FetchHttpClient(60000);
+    const request = new Request(`http://localhost:${address.port}/timeout`);
+    const httpClientOptions = { timeout: 300 };
+
+    // when
+    const doRequest = async (): Promise<Response> =>
+      await httpClient.request(request, httpClientOptions);
+
+    // then
+    await expect(doRequest).rejects.toThrowError('Request Timeout: 300ms');
+  });
 });

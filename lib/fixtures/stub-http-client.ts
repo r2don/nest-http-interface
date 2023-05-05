@@ -1,11 +1,16 @@
-import { type HttpClient } from '../types/http-client.interface';
+import { type HttpClient, type HttpClientOptions } from '../types';
 
 export class StubHttpClient implements HttpClient {
   #requestInfo: Request[] = [];
   #responses: Response[] = [];
+  #options: Array<HttpClientOptions | undefined> = [];
 
-  async request(request: Request): Promise<Response> {
+  async request(
+    request: Request,
+    options?: HttpClientOptions,
+  ): Promise<Response> {
     this.#requestInfo.push(request);
+    this.#options.push(options);
 
     const response = this.#responses.shift();
 
@@ -14,6 +19,10 @@ export class StubHttpClient implements HttpClient {
 
   get requestInfo(): Request[] {
     return this.#requestInfo;
+  }
+
+  get options(): Array<HttpClientOptions | undefined> {
+    return this.#options;
   }
 
   addResponse(body: Record<string, unknown> | string): void {

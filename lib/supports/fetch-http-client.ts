@@ -1,4 +1,4 @@
-import { type HttpClient } from '../types';
+import { type HttpClient, type HttpClientOptions } from '../types';
 
 export class FetchHttpClient implements HttpClient {
   readonly #timeout: number;
@@ -7,16 +7,20 @@ export class FetchHttpClient implements HttpClient {
     this.#timeout = timeout;
   }
 
-  async request(request: Request): Promise<Response> {
+  async request(
+    request: Request,
+    options?: HttpClientOptions,
+  ): Promise<Response> {
     const controller = new AbortController();
+    const timeout = options?.timeout ?? this.#timeout;
 
     return await Promise.race<Response>([
       fetch(request, { signal: controller.signal }),
       new Promise((resolve, reject) =>
         setTimeout(() => {
           controller.abort();
-          reject(new Error(`Request Timeout: ${this.#timeout}ms`));
-        }, this.#timeout),
+          reject(new Error(`Request Timeout: ${timeout}ms`));
+        }, timeout),
       ),
     ]);
   }

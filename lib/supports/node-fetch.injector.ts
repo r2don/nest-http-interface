@@ -49,7 +49,7 @@ export class NodeFetchInjector implements OnModuleInit {
 
       wrapper.instance[methodName] = async (...args: never[]) =>
         await this.httpClient
-          .request(httpRequestBuilder.build(args))
+          .request(httpRequestBuilder.build(args), httpRequestBuilder.options)
           .then(async (response) => {
             if (responseBodyBuilder != null) {
               const res = await response.json();
