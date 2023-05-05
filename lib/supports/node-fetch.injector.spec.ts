@@ -21,6 +21,7 @@ import { GraphQLExchange } from '../decorators/graphql-exchange.decorator';
 import { ResponseBody } from '../decorators/response-body.decorator';
 import { StubDiscoveryService } from '../fixtures/stub-discovery.service';
 import { StubHttpClient } from '../fixtures/stub-http-client';
+import { type HttpClientOptions } from '../types';
 
 describe('NodeFetchInjector', () => {
   const metadataScanner = new MetadataScanner();
@@ -214,6 +215,27 @@ describe('NodeFetchInjector', () => {
     // then
     expect(httpClient.requestInfo).toHaveLength(1);
     expect(httpClient.requestInfo[0].method).toBe(method);
+  });
+
+  test('should use http config option from decorator', async () => {
+    // given
+    const options: HttpClientOptions = { timeout: 12345 };
+    @HttpInterface('https://example.com')
+    class SampleClient {
+      @GetExchange('/api', options)
+      async request(): Promise<string> {
+        return 'request';
+      }
+    }
+    const instance = discoveryService.addProvider(SampleClient);
+    nodeFetchInjector.onModuleInit();
+
+    // when
+    await instance.request();
+
+    // then
+    expect(httpClient.options).toHaveLength(1);
+    expect(httpClient.options[0]).toBe(options);
   });
 
   test('should include body', async () => {

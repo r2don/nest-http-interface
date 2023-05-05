@@ -33,5 +33,6 @@ export class StubHttpClient implements HttpClient {
   clear(): void {
     this.#requestInfo = [];
     this.#responses = [];
+    this.#options = [];
   }
 }
