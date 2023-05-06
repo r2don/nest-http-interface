@@ -1,0 +1,89 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`HttpInterfaceVisitor > should ignore if file name is not match 1`] = `
+"import { HttpInterface, GraphQLExchange } from '@r2don/nest-http-interface';
+class ResponseClass {
+}
+let UserService = class UserService {
+    async getUser() {
+        throw new Error('not implemented');
+    }
+};
+__decorate([
+    GraphQLExchange()
+], UserService.prototype, \\"getUser\\", null);
+UserService = __decorate([
+    HttpInterface()
+], UserService);
+"
+`;
+
+exports[`HttpInterfaceVisitor > should ignore if method has ResponseBody decorator 1`] = `
+"import { HttpInterface, PostExchange, ResponseBody } from '@r2don/nest-http-interface';
+import { User } from './user.entity';
+let UserService = class UserService {
+    async getUser() {
+        throw new Error('not implemented');
+    }
+};
+__decorate([
+    PostExchange(),
+    ResponseBody(User)
+], UserService.prototype, \\"getUser\\", null);
+UserService = __decorate([
+    HttpInterface()
+], UserService);
+"
+`;
+
+exports[`HttpInterfaceVisitor > should ignore if return type if not a promise  1`] = `
+"import { HttpInterface, GetExchange } from '@r2don/nest-http-interface';
+let UserService = class UserService {
+    getUser() {
+        throw new Error('not implemented');
+    }
+};
+__decorate([
+    GetExchange()
+], UserService.prototype, \\"getUser\\", null);
+UserService = __decorate([
+    HttpInterface()
+], UserService);
+"
+`;
+
+exports[`HttpInterfaceVisitor > should ignore if return type is not a class 1`] = `
+"import { HttpInterface, GetExchange } from '@r2don/nest-http-interface';
+let TextService = class TextService {
+    constructor() { }
+    async getText() {
+        return 'text';
+    }
+};
+__decorate([
+    GetExchange()
+], TextService.prototype, \\"getText\\", null);
+TextService = __decorate([
+    HttpInterface()
+], TextService);
+"
+`;
+
+exports[`HttpInterfaceVisitor > should override plugin suffix option 1`] = `
+"import { HttpInterface, GraphQLExchange } from '@r2don/nest-http-interface';
+class ResponseClass {
+}
+let UserService = class UserService {
+    async getUser() {
+        throw new Error('not implemented');
+    }
+};
+__decorate([
+    GraphQLExchange(),
+    ResponseBody(ResponseClass)
+], UserService.prototype, \\"getUser\\", null);
+UserService = __decorate([
+    HttpInterface()
+], UserService);
+"
+`;
