@@ -22,7 +22,7 @@ This library is inspired by the HTTP interface in Spring 6 and provides a simila
 ## Requirements
 
 - Node.js 18 or later (because this library uses `fetch` internally)
-- Nest.js
+- Nest.js 8 or later
 
 ## Installation
 
