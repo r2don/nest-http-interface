@@ -47,3 +47,26 @@ class UserService {
     throw new Error('not implemented');
   }
 }`;
+
+export const arrayResponseBodyServiceCode = `
+import { HttpInterface, GetExchange } from '@r2don/nest-http-interface';
+
+class ResponseClass {}
+
+@HttpInterface()
+class UserService {
+  @GetExchange()
+  async getUsers(): Promise<ResponseClass[]> {
+    throw new Error('not implemented');
+  }
+
+  @GetExchange()
+  async getUserList(): Promise<Array<ResponseClass>> {
+    throw new Error('not implemented');
+  }
+
+  @GetExchange()
+  async getUsersReadonly(): Promise<readonly ResponseClass[]> {
+    throw new Error('not implemented');
+  }
+}`;

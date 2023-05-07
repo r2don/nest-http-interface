@@ -107,7 +107,7 @@ export class HttpInterfaceVisitor {
       return undefined;
     }
 
-    const innerType = node.type.typeArguments?.[0];
+    const innerType = this.getInnerType(node.type.typeArguments?.[0]);
     if (
       innerType == null ||
       !ts.isTypeReferenceNode(innerType) ||
@@ -117,6 +117,34 @@ export class HttpInterfaceVisitor {
     }
 
     return innerType.typeName.text;
+  }
+
+  private getInnerType(node?: ts.TypeNode): ts.TypeNode | undefined {
+    /* c8 ignore next 3 */
+    if (node == null) {
+      return undefined;
+    }
+
+    if (ts.isArrayTypeNode(node)) {
+      return this.getInnerType(node.elementType);
+    }
+
+    if (
+      ts.isTypeReferenceNode(node) &&
+      ts.isIdentifier(node.typeName) &&
+      node.typeName.text === 'Array'
+    ) {
+      return this.getInnerType(node.typeArguments?.[0]);
+    }
+
+    if (
+      ts.isTypeOperatorNode(node) &&
+      node.operator === ts.SyntaxKind.ReadonlyKeyword
+    ) {
+      return this.getInnerType(node.type);
+    }
+
+    return node;
   }
 
   private isExchangeMethod(
