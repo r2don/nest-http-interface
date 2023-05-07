@@ -6,12 +6,7 @@ import {
 } from '@nestjs/core';
 import { FetchHttpClient } from './supports/fetch-http-client';
 import { NodeFetchInjector } from './supports/node-fetch.injector';
-import { type HttpClient } from './types';
-
-export interface HttpInterfaceConfig {
-  timeout?: number;
-  httpClient?: HttpClient;
-}
+import { type HttpInterfaceConfig } from './types/http-interface-config';
 
 export class HttpInterfaceModule {
   static forRoot(config: HttpInterfaceConfig = {}): DynamicModule {
@@ -33,6 +28,7 @@ export class HttpInterfaceModule {
               metadataScanner,
               discoveryService,
               config.httpClient ?? new FetchHttpClient(timeout),
+              config,
             );
           },
         },

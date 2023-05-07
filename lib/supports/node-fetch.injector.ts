@@ -9,6 +9,7 @@ import {
   RESPONSE_BODY_METADATA,
 } from '../decorators';
 import { HttpClient } from '../types';
+import { HttpInterfaceConfig } from '../types/http-interface-config';
 
 @Injectable()
 export class NodeFetchInjector implements OnModuleInit {
@@ -16,6 +17,7 @@ export class NodeFetchInjector implements OnModuleInit {
     private readonly metadataScanner: MetadataScanner,
     private readonly discoveryService: DiscoveryService,
     private readonly httpClient: HttpClient,
+    private readonly httpInterfaceConfig?: HttpInterfaceConfig,
   ) {}
 
   onModuleInit(): void {
@@ -54,7 +56,10 @@ export class NodeFetchInjector implements OnModuleInit {
             if (responseBodyBuilder != null) {
               const res = await response.json();
 
-              return responseBodyBuilder.build(res);
+              return responseBodyBuilder.build(
+                res,
+                this.httpInterfaceConfig?.transformOption,
+              );
             }
 
             return await response.text();
