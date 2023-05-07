@@ -8,9 +8,9 @@ import {
   PatchExchange,
   PostExchange,
   PutExchange,
+  GraphQLExchange,
+  ResponseBody,
 } from '../../decorators';
-import { GraphQLExchange } from '../../decorators/graphql-exchange.decorator';
-import { ResponseBody } from '../../decorators/response-body.decorator';
 
 export class HttpInterfaceVisitor {
   HTTP_INTERFACE_DECORATOR = HttpInterface.name;
@@ -29,17 +29,23 @@ export class HttpInterfaceVisitor {
   libModuleAlias = 'eager_module_1';
   libName = '@r2don/nest-http-interface';
   importSet = new Set<string>();
+  typeFormatFlag =
+    ts.TypeFormatFlags.UseTypeOfFunction |
+    ts.TypeFormatFlags.NoTruncation |
+    ts.TypeFormatFlags.UseFullyQualifiedType |
+    ts.TypeFormatFlags.WriteTypeArgumentsOfSignature;
 
   visit(
     sourceFile: ts.SourceFile,
     ctx: ts.TransformationContext,
-    _program: ts.Program,
+    program: ts.Program,
   ): ts.Node {
     this.importSet.clear();
     const factory = ctx.factory;
+    const typeChecker = program.getTypeChecker();
     const visitNode = (node: ts.Node): ts.Node => {
       if (this.isHttpInterfaceClass(node)) {
-        return this.visitMethods(node, factory);
+        return this.visitMethods(node, factory, typeChecker);
       }
 
       if (ts.isSourceFile(node)) {
@@ -84,13 +90,14 @@ export class HttpInterfaceVisitor {
   private visitMethods(
     node: ts.ClassDeclaration,
     factory: ts.NodeFactory,
+    typeChecker: ts.TypeChecker,
   ): ts.ClassDeclaration {
     const updatedMembers = node.members.map((member) => {
       if (!this.isExchangeMethod(member)) {
         return member;
       }
 
-      return this.appendResponseBodyDecorator(member, factory);
+      return this.appendResponseBodyDecorator(member, factory, typeChecker);
     });
 
     return factory.updateClassDeclaration(
@@ -113,8 +120,9 @@ export class HttpInterfaceVisitor {
   private appendResponseBodyDecorator(
     node: ts.MethodDeclaration,
     factory: ts.NodeFactory,
+    typeChecker: ts.TypeChecker,
   ): ts.MethodDeclaration {
-    const returnType = this.getReturnTypeAsText(node);
+    const returnType = this.getReturnTypeAsText(node, typeChecker);
 
     if (returnType == null) {
       return node;
@@ -146,7 +154,10 @@ export class HttpInterfaceVisitor {
     );
   }
 
-  private getReturnTypeAsText(node: ts.MethodDeclaration): string | undefined {
+  private getReturnTypeAsText(
+    node: ts.MethodDeclaration,
+    typeChecker: ts.TypeChecker,
+  ): string | undefined {
     if (
       node.type == null ||
       !ts.isTypeReferenceNode(node.type) ||
@@ -165,7 +176,13 @@ export class HttpInterfaceVisitor {
       return undefined;
     }
 
-    return innerType.typeName.text;
+    return typeChecker
+      .typeToString(
+        typeChecker.getTypeAtLocation(innerType),
+        undefined,
+        this.typeFormatFlag,
+      )
+      .replace('import', 'require');
   }
 
   private getInnerType(node?: ts.TypeNode): ts.TypeNode | undefined {
