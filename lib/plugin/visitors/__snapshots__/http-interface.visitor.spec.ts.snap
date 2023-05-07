@@ -3,7 +3,7 @@
 exports[`HttpInterfaceVisitor > should handle array return type 1`] = `
 "\\"use strict\\";
 Object.defineProperty(exports, \\"__esModule\\", { value: true });
-const eager_module_1 = require(\\"@r2don/nest-http-interface\\");
+const r2don_http_module_1 = require(\\"@r2don/nest-http-interface\\");
 const nest_http_interface_1 = require(\\"@r2don/nest-http-interface\\");
 class ResponseClass {
 }
@@ -20,15 +20,15 @@ let UserService = class UserService {
 };
 __decorate([
     (0, nest_http_interface_1.GetExchange)(),
-    eager_module_1.ResponseBody(ResponseClass)
+    r2don_http_module_1.ResponseBody(ResponseClass)
 ], UserService.prototype, \\"getUsers\\", null);
 __decorate([
     (0, nest_http_interface_1.GetExchange)(),
-    eager_module_1.ResponseBody(ResponseClass)
+    r2don_http_module_1.ResponseBody(ResponseClass)
 ], UserService.prototype, \\"getUserList\\", null);
 __decorate([
     (0, nest_http_interface_1.GetExchange)(),
-    eager_module_1.ResponseBody(ResponseClass)
+    r2don_http_module_1.ResponseBody(ResponseClass)
 ], UserService.prototype, \\"getUsersReadonly\\", null);
 UserService = __decorate([
     (0, nest_http_interface_1.HttpInterface)()
@@ -116,7 +116,7 @@ TextService = __decorate([
 exports[`HttpInterfaceVisitor > should override plugin suffix option 1`] = `
 "\\"use strict\\";
 Object.defineProperty(exports, \\"__esModule\\", { value: true });
-const eager_module_1 = require(\\"@r2don/nest-http-interface\\");
+const r2don_http_module_1 = require(\\"@r2don/nest-http-interface\\");
 const nest_http_interface_1 = require(\\"@r2don/nest-http-interface\\");
 class ResponseClass {
 }
@@ -127,7 +127,7 @@ let UserService = class UserService {
 };
 __decorate([
     (0, nest_http_interface_1.GraphQLExchange)(),
-    eager_module_1.ResponseBody(ResponseClass)
+    r2don_http_module_1.ResponseBody(ResponseClass)
 ], UserService.prototype, \\"getUser\\", null);
 UserService = __decorate([
     (0, nest_http_interface_1.HttpInterface)()
