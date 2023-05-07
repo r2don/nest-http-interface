@@ -516,4 +516,38 @@ describe('NodeFetchInjector', () => {
       'application/json',
     );
   });
+
+  test('should use global transform options', async () => {
+    // given
+    const metadataScanner = new MetadataScanner();
+    const httpClient = new StubHttpClient();
+    const discoveryService = new StubDiscoveryService();
+    const nodeFetchInjector = new NodeFetchInjector(
+      metadataScanner,
+      discoveryService,
+      httpClient,
+      { transformOption: { strategy: 'excludeAll' } },
+    );
+    class ResponseTest {
+      constructor(readonly status: string) {}
+    }
+    @HttpInterface()
+    class SampleClient {
+      @GetExchange('https://example.com/api')
+      @ResponseBody(ResponseTest)
+      async request(): Promise<ResponseTest> {
+        return imitation();
+      }
+    }
+    const instance = discoveryService.addProvider(SampleClient);
+    httpClient.addResponse({ status: 'ok' });
+    nodeFetchInjector.onModuleInit();
+
+    // when
+    const response = await instance.request();
+
+    // then
+    expect(response).toBeInstanceOf(ResponseTest);
+    expect(response.status).toBeUndefined();
+  });
 });
