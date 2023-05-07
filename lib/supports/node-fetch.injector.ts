@@ -8,8 +8,7 @@ import {
   HTTP_INTERFACE_METADATA,
   RESPONSE_BODY_METADATA,
 } from '../decorators';
-import { HttpClient } from '../types';
-import { HttpInterfaceConfig } from '../types/http-interface-config';
+import { HttpClient, HttpInterfaceConfig } from '../types';
 
 @Injectable()
 export class NodeFetchInjector implements OnModuleInit {

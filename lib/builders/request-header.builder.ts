@@ -1,5 +1,5 @@
 import { TupleArrayBuilder } from './tuple-array.builder';
-import { type ParamDecoratorOption } from '../types/param-decorator-option.interface';
+import { type ParamDecoratorOption } from '../types';
 
 export class RequestHeaderBuilder {
   metadata: Array<ParamDecoratorOption<string, string>> = [];

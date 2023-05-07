@@ -10,10 +10,13 @@ export class ResponseBodyBuilder<T> {
     readonly options?: ClassTransformOptions,
   ) {}
 
-  build(plain: Record<string, unknown>, options?: ClassTransformOptions): T {
+  build(
+    plain: Record<string, unknown>,
+    globalOptions?: ClassTransformOptions,
+  ): T {
     return plainToInstance(this.cls, plain, {
+      ...globalOptions,
       ...this.options,
-      ...options,
     });
   }
 }

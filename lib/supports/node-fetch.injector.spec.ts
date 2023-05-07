@@ -16,9 +16,9 @@ import {
   RequestForm,
   RequestHeader,
   RequestParam,
+  GraphQLExchange,
+  ResponseBody,
 } from '../decorators';
-import { GraphQLExchange } from '../decorators/graphql-exchange.decorator';
-import { ResponseBody } from '../decorators/response-body.decorator';
 import { StubDiscoveryService } from '../fixtures/stub-discovery.service';
 import { StubHttpClient } from '../fixtures/stub-http-client';
 import { type HttpClientOptions } from '../types';

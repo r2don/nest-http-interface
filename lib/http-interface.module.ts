@@ -6,7 +6,7 @@ import {
 } from '@nestjs/core';
 import { FetchHttpClient } from './supports/fetch-http-client';
 import { NodeFetchInjector } from './supports/node-fetch.injector';
-import { type HttpInterfaceConfig } from './types/http-interface-config';
+import { type HttpInterfaceConfig } from './types';
 
 export class HttpInterfaceModule {
   static forRoot(config: HttpInterfaceConfig = {}): DynamicModule {
