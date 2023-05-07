@@ -11,7 +11,7 @@ import { before } from '../compiler-plugin';
 
 describe('HttpInterfaceVisitor', () => {
   const compilerOptions = {
-    module: ts.ModuleKind.ES2020,
+    module: ts.ModuleKind.CommonJS,
     target: ts.ScriptTarget.ES2020,
     newLine: ts.NewLineKind.LineFeed,
     noEmitHelpers: true,

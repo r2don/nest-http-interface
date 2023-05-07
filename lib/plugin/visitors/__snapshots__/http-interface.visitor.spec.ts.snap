@@ -1,7 +1,10 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`HttpInterfaceVisitor > should handle array return type 1`] = `
-"import { HttpInterface, GetExchange } from '@r2don/nest-http-interface';
+"\\"use strict\\";
+Object.defineProperty(exports, \\"__esModule\\", { value: true });
+const eager_module_1 = require(\\"@r2don/nest-http-interface\\");
+const nest_http_interface_1 = require(\\"@r2don/nest-http-interface\\");
 class ResponseClass {
 }
 let UserService = class UserService {
@@ -16,25 +19,27 @@ let UserService = class UserService {
     }
 };
 __decorate([
-    GetExchange(),
-    ResponseBody(ResponseClass)
+    (0, nest_http_interface_1.GetExchange)(),
+    eager_module_1.ResponseBody(ResponseClass)
 ], UserService.prototype, \\"getUsers\\", null);
 __decorate([
-    GetExchange(),
-    ResponseBody(ResponseClass)
+    (0, nest_http_interface_1.GetExchange)(),
+    eager_module_1.ResponseBody(ResponseClass)
 ], UserService.prototype, \\"getUserList\\", null);
 __decorate([
-    GetExchange(),
-    ResponseBody(ResponseClass)
+    (0, nest_http_interface_1.GetExchange)(),
+    eager_module_1.ResponseBody(ResponseClass)
 ], UserService.prototype, \\"getUsersReadonly\\", null);
 UserService = __decorate([
-    HttpInterface()
+    (0, nest_http_interface_1.HttpInterface)()
 ], UserService);
 "
 `;
 
 exports[`HttpInterfaceVisitor > should ignore if file name is not match 1`] = `
-"import { HttpInterface, GraphQLExchange } from '@r2don/nest-http-interface';
+"\\"use strict\\";
+Object.defineProperty(exports, \\"__esModule\\", { value: true });
+const nest_http_interface_1 = require(\\"@r2don/nest-http-interface\\");
 class ResponseClass {
 }
 let UserService = class UserService {
@@ -43,50 +48,56 @@ let UserService = class UserService {
     }
 };
 __decorate([
-    GraphQLExchange()
+    (0, nest_http_interface_1.GraphQLExchange)()
 ], UserService.prototype, \\"getUser\\", null);
 UserService = __decorate([
-    HttpInterface()
+    (0, nest_http_interface_1.HttpInterface)()
 ], UserService);
 "
 `;
 
 exports[`HttpInterfaceVisitor > should ignore if method has ResponseBody decorator 1`] = `
-"import { HttpInterface, PostExchange, ResponseBody } from '@r2don/nest-http-interface';
-import { User } from './user.entity';
+"\\"use strict\\";
+Object.defineProperty(exports, \\"__esModule\\", { value: true });
+const nest_http_interface_1 = require(\\"@r2don/nest-http-interface\\");
+const user_entity_1 = require(\\"./user.entity\\");
 let UserService = class UserService {
     async getUser() {
         throw new Error('not implemented');
     }
 };
 __decorate([
-    PostExchange(),
-    ResponseBody(User)
+    (0, nest_http_interface_1.PostExchange)(),
+    (0, nest_http_interface_1.ResponseBody)(user_entity_1.User)
 ], UserService.prototype, \\"getUser\\", null);
 UserService = __decorate([
-    HttpInterface()
+    (0, nest_http_interface_1.HttpInterface)()
 ], UserService);
 "
 `;
 
 exports[`HttpInterfaceVisitor > should ignore if return type if not a promise  1`] = `
-"import { HttpInterface, GetExchange } from '@r2don/nest-http-interface';
+"\\"use strict\\";
+Object.defineProperty(exports, \\"__esModule\\", { value: true });
+const nest_http_interface_1 = require(\\"@r2don/nest-http-interface\\");
 let UserService = class UserService {
     getUser() {
         throw new Error('not implemented');
     }
 };
 __decorate([
-    GetExchange()
+    (0, nest_http_interface_1.GetExchange)()
 ], UserService.prototype, \\"getUser\\", null);
 UserService = __decorate([
-    HttpInterface()
+    (0, nest_http_interface_1.HttpInterface)()
 ], UserService);
 "
 `;
 
 exports[`HttpInterfaceVisitor > should ignore if return type is not a class 1`] = `
-"import { HttpInterface, GetExchange } from '@r2don/nest-http-interface';
+"\\"use strict\\";
+Object.defineProperty(exports, \\"__esModule\\", { value: true });
+const nest_http_interface_1 = require(\\"@r2don/nest-http-interface\\");
 let TextService = class TextService {
     constructor() { }
     async getText() {
@@ -94,16 +105,19 @@ let TextService = class TextService {
     }
 };
 __decorate([
-    GetExchange()
+    (0, nest_http_interface_1.GetExchange)()
 ], TextService.prototype, \\"getText\\", null);
 TextService = __decorate([
-    HttpInterface()
+    (0, nest_http_interface_1.HttpInterface)()
 ], TextService);
 "
 `;
 
 exports[`HttpInterfaceVisitor > should override plugin suffix option 1`] = `
-"import { HttpInterface, GraphQLExchange } from '@r2don/nest-http-interface';
+"\\"use strict\\";
+Object.defineProperty(exports, \\"__esModule\\", { value: true });
+const eager_module_1 = require(\\"@r2don/nest-http-interface\\");
+const nest_http_interface_1 = require(\\"@r2don/nest-http-interface\\");
 class ResponseClass {
 }
 let UserService = class UserService {
@@ -112,11 +126,11 @@ let UserService = class UserService {
     }
 };
 __decorate([
-    GraphQLExchange(),
-    ResponseBody(ResponseClass)
+    (0, nest_http_interface_1.GraphQLExchange)(),
+    eager_module_1.ResponseBody(ResponseClass)
 ], UserService.prototype, \\"getUser\\", null);
 UserService = __decorate([
-    HttpInterface()
+    (0, nest_http_interface_1.HttpInterface)()
 ], UserService);
 "
 `;
