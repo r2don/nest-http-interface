@@ -59,7 +59,7 @@ import {
 class UserHttpService {
   @GetExchange('/users/{id}') // path
   @ResponseBody(UserResponse) // response dto
-  async request(@PathVariable() id: number): Promise<UserResponse> {
+  async request(@PathVariable('id') id: number): Promise<UserResponse> {
     return imitation(id); // this is a mock function to prevent the type error
   }
 }
