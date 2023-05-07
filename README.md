@@ -126,7 +126,7 @@ To enable the plugin, open nest-cli.json
 ```json
 {
   "compilerOptions": {
-    "plugins": ["@nestjs/swagger"]
+    "plugins": ["@r2don/nest-http-interface"]
   }
 }
 ```
