@@ -7,8 +7,9 @@ describe('PathVariable', () => {
   test('should not create path variable metadata when not on method', () => {
     // given
     class TestService {
+      foo: string;
       constructor(@PathVariable('foo') foo: string) {
-        return foo;
+        this.foo = foo;
       }
     }
 

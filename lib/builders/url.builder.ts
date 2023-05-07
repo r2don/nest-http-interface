@@ -37,7 +37,7 @@ export class UrlBuilder {
   }
 
   private isStartWithProtocol(): boolean {
-    return this.host.match(/^https?:\/\//) != null;
+    return /^https?:\/\//.exec(this.host) != null;
   }
 
   private replaceSlash(url: string): string {

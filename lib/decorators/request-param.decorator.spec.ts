@@ -7,8 +7,9 @@ describe('RequestParam', () => {
   test('should not create request param metadata when not on method', () => {
     // given
     class TestService {
+      foo: string;
       constructor(@RequestParam() foo: string) {
-        return foo;
+        this.foo = foo;
       }
     }
 

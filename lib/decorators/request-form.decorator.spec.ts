@@ -8,8 +8,9 @@ describe('RequestForm', () => {
   test('should not create request form metadata when not on method', () => {
     // given
     class TestService {
+      foo: string;
       constructor(@RequestForm() foo: string) {
-        return foo;
+        this.foo = foo;
       }
     }
 

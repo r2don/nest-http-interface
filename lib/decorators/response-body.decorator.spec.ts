@@ -6,7 +6,9 @@ import { type ResponseBodyBuilder } from '../builders/response-body.builder';
 describe('ResponseBody', () => {
   test('should set response body metadata', () => {
     // given
-    class TestResponse {}
+    class TestResponse {
+      constructor(readonly foo: string) {}
+    }
     class TestService {
       @ResponseBody(TestResponse, { version: 1 })
       async request(): Promise<string> {

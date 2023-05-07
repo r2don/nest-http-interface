@@ -8,8 +8,9 @@ describe('RequestHeader', () => {
   test('should not create request header metadata when not on method', () => {
     // given
     class TestService {
+      foo: string;
       constructor(@RequestHeader() foo: string) {
-        return foo;
+        this.foo = foo;
       }
     }
 

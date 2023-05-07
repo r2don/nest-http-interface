@@ -8,8 +8,9 @@ describe('RequestBody', () => {
   test('should not create request body metadata when not on method', () => {
     // given
     class TestService {
+      foo: string;
       constructor(@RequestBody() foo: string) {
-        return foo;
+        this.foo = foo;
       }
     }
 
