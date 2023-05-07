@@ -9,22 +9,23 @@ import {
 import { before } from '../compiler-plugin';
 
 describe('HttpInterfaceVisitor', () => {
+  const compilerOptions = {
+    module: ts.ModuleKind.ES2020,
+    target: ts.ScriptTarget.ES2020,
+    newLine: ts.NewLineKind.LineFeed,
+    noEmitHelpers: true,
+    experimentalDecorators: true,
+    strict: true,
+  };
+
   test('should ignore if file name is not match', () => {
     // given
-    const options: ts.CompilerOptions = {
-      module: ts.ModuleKind.ES2020,
-      target: ts.ScriptTarget.ES2020,
-      newLine: ts.NewLineKind.LineFeed,
-      noEmitHelpers: true,
-      experimentalDecorators: true,
-      strict: true,
-    };
     const filename = 'not-match.ts';
-    const fakeProgram = ts.createProgram([filename], options);
+    const fakeProgram = ts.createProgram([filename], compilerOptions);
 
     // when
     const result = ts.transpileModule(needResponseBodyServiceCode, {
-      compilerOptions: options,
+      compilerOptions,
       fileName: filename,
       transformers: { before: [before({}, fakeProgram)] },
     });
@@ -35,20 +36,12 @@ describe('HttpInterfaceVisitor', () => {
 
   test('should ignore if return type is not a class', () => {
     // given
-    const options: ts.CompilerOptions = {
-      module: ts.ModuleKind.ES2020,
-      target: ts.ScriptTarget.ES2020,
-      newLine: ts.NewLineKind.LineFeed,
-      noEmitHelpers: true,
-      experimentalDecorators: true,
-      strict: true,
-    };
     const filename = 'text.service.ts';
-    const fakeProgram = ts.createProgram([filename], options);
+    const fakeProgram = ts.createProgram([filename], compilerOptions);
 
     // when
     const result = ts.transpileModule(returnStringServiceCode, {
-      compilerOptions: options,
+      compilerOptions,
       fileName: filename,
       transformers: {
         before: [before(undefined, fakeProgram)],
@@ -61,20 +54,12 @@ describe('HttpInterfaceVisitor', () => {
 
   test('should ignore if method has ResponseBody decorator', () => {
     // given
-    const options: ts.CompilerOptions = {
-      module: ts.ModuleKind.ES2020,
-      target: ts.ScriptTarget.ES2020,
-      newLine: ts.NewLineKind.LineFeed,
-      noEmitHelpers: true,
-      experimentalDecorators: true,
-      strict: true,
-    };
     const filename = 'text.service.ts';
-    const fakeProgram = ts.createProgram([filename], options);
+    const fakeProgram = ts.createProgram([filename], compilerOptions);
 
     // when
     const result = ts.transpileModule(hasResponseBodyServiceCode, {
-      compilerOptions: options,
+      compilerOptions,
       fileName: filename,
       transformers: { before: [before({}, fakeProgram)] },
     });
@@ -85,20 +70,12 @@ describe('HttpInterfaceVisitor', () => {
 
   test('should ignore if return type if not a promise ', () => {
     // given
-    const options: ts.CompilerOptions = {
-      module: ts.ModuleKind.ES2020,
-      target: ts.ScriptTarget.ES2020,
-      newLine: ts.NewLineKind.LineFeed,
-      noEmitHelpers: true,
-      experimentalDecorators: true,
-      strict: true,
-    };
     const filename = 'text.service.ts';
-    const fakeProgram = ts.createProgram([filename], options);
+    const fakeProgram = ts.createProgram([filename], compilerOptions);
 
     // when
     const result = ts.transpileModule(notPromiseServiceCode, {
-      compilerOptions: options,
+      compilerOptions,
       fileName: filename,
       transformers: { before: [before({}, fakeProgram)] },
     });
@@ -109,20 +86,12 @@ describe('HttpInterfaceVisitor', () => {
 
   test('should override plugin suffix option', () => {
     // given
-    const options: ts.CompilerOptions = {
-      module: ts.ModuleKind.ES2020,
-      target: ts.ScriptTarget.ES2020,
-      newLine: ts.NewLineKind.LineFeed,
-      noEmitHelpers: true,
-      experimentalDecorators: true,
-      strict: true,
-    };
     const filename = '.custom.ts';
-    const fakeProgram = ts.createProgram([filename], options);
+    const fakeProgram = ts.createProgram([filename], compilerOptions);
 
     // when
     const result = ts.transpileModule(needResponseBodyServiceCode, {
-      compilerOptions: options,
+      compilerOptions,
       fileName: filename,
       transformers: {
         before: [
