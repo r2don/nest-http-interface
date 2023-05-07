@@ -35,20 +35,25 @@ $ npm install @r2don/nest-http-interface
 First, the module we created must be imported into `AppModule.ts`:
 
 ```ts
-import {Module} from '@nestjs/common';
-import {HttpInterfaceModule} from '@r2don/nest-http-interface';
+import { Module } from '@nestjs/common';
+import { HttpInterfaceModule } from '@r2don/nest-http-interface';
 
 @Module({
   imports: [HttpInterfaceModule.forRoot()],
 })
-export class AppModule {
-}
+export class AppModule {}
 ```
 
 Then, you need to create the desired HTTP service and specify several decorators:
 
 ```ts
-import {HttpInterface, GetExchange, ResponseBody, imitation, PathVariable} from '@r2don/nest-http-interface';
+import {
+  HttpInterface,
+  GetExchange,
+  ResponseBody,
+  imitation,
+  PathVariable,
+} from '@r2don/nest-http-interface';
 
 @HttpInterface('https://example.com/api') // base url
 class UserHttpService {
@@ -66,8 +71,7 @@ the `request` method:
 ```ts
 @Injectable()
 class UserService {
-  constructor(private readonly client: UserHttpService) {
-  }
+  constructor(private readonly client: UserHttpService) {}
 
   async getUser(id: number): Promise<UserResponse> {
     return this.client.request(id);
@@ -92,8 +96,9 @@ class UserService {
 
 - `@RequestParam(key?: string, defaultValue?: string)`: Specifies the query string parameter, requiring the key of the
   parameter. If `key` is not specified, the parameter must be an object. See examples below:
-    - Example with key: `request(@RequestParam('foo') query: string): string`
-    - Example without key: `request(@RequestParam() query: { foo: string }): string`
+
+  - Example with key: `request(@RequestParam('foo') query: string): string`
+  - Example without key: `request(@RequestParam() query: { foo: string }): string`
 
 - `@RequestHeader(key?: string, option?: { defaultValue?: string; transform?: (value: string) => string })`: Specifies
   the request header, requiring the key of the header optionally.
@@ -107,6 +112,49 @@ class UserService {
 
 - `@RequestForm(key?: string, defaultValue?: string)`: Specifies the request form
   using `application/x-www-form-urlencoded` as the content type, requiring the key of the body optionally.
+
+## Auto generate `@ResponseBody()` from return type of exchange method
+
+Because of limitation of `reflect-metadata`, `@ResponseBody()` is required to specify the response DTO.
+
+But this library provides a way to auto generate `@ResponseBody()` and infers response DTO from return type of exchange method.
+
+It uses `CLI Plugin` like `@nestjs/swagger` and `@nestjs/graphql`.
+
+To enable the plugin, open nest-cli.json
+
+```json
+{
+  "compilerOptions": {
+    "plugins": ["@nestjs/swagger"]
+  }
+}
+```
+
+You can use the options property to customize the behavior of the plugin.
+
+```json
+{
+  "compilerOptions": {
+    "plugins": [
+      {
+        "name": "@r2don/nest-http-interface",
+        "options": {
+          "interfaceFilenameSuffix": [".http.service.ts"]
+        }
+      }
+    ]
+  }
+}
+```
+
+Here is the list of options:
+
+| option                  | default         | description               |
+| ----------------------- | --------------- | ------------------------- |
+| interfaceFilenameSuffix | ['.service.ts'] | HTTP service files suffix |
+
+`@ResponseBody()` will be added whenever `nest start` or `nest build` is executed.
 
 ## License
 
