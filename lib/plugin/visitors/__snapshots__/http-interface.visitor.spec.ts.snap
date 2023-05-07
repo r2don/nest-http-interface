@@ -1,5 +1,38 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`HttpInterfaceVisitor > should handle array return type 1`] = `
+"import { HttpInterface, GetExchange } from '@r2don/nest-http-interface';
+class ResponseClass {
+}
+let UserService = class UserService {
+    async getUsers() {
+        throw new Error('not implemented');
+    }
+    async getUserList() {
+        throw new Error('not implemented');
+    }
+    async getUsersReadonly() {
+        throw new Error('not implemented');
+    }
+};
+__decorate([
+    GetExchange(),
+    ResponseBody(ResponseClass)
+], UserService.prototype, \\"getUsers\\", null);
+__decorate([
+    GetExchange(),
+    ResponseBody(ResponseClass)
+], UserService.prototype, \\"getUserList\\", null);
+__decorate([
+    GetExchange(),
+    ResponseBody(ResponseClass)
+], UserService.prototype, \\"getUsersReadonly\\", null);
+UserService = __decorate([
+    HttpInterface()
+], UserService);
+"
+`;
+
 exports[`HttpInterfaceVisitor > should ignore if file name is not match 1`] = `
 "import { HttpInterface, GraphQLExchange } from '@r2don/nest-http-interface';
 class ResponseClass {

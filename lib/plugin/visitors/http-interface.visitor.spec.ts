@@ -5,6 +5,7 @@ import {
   hasResponseBodyServiceCode,
   needResponseBodyServiceCode,
   notPromiseServiceCode,
+  arrayResponseBodyServiceCode,
 } from '../../fixtures/fake-service-code';
 import { before } from '../compiler-plugin';
 
@@ -97,6 +98,24 @@ describe('HttpInterfaceVisitor', () => {
         before: [
           before({ interfaceFilenameSuffix: '.custom.ts' }, fakeProgram),
         ],
+      },
+    });
+
+    // then
+    expect(result.outputText).toMatchSnapshot();
+  });
+
+  test('should handle array return type', () => {
+    // given
+    const filename = 'text.service.ts';
+    const fakeProgram = ts.createProgram([filename], compilerOptions);
+
+    // when
+    const result = ts.transpileModule(arrayResponseBodyServiceCode, {
+      compilerOptions,
+      fileName: filename,
+      transformers: {
+        before: [before({}, fakeProgram)],
       },
     });
 
