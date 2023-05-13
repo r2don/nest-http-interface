@@ -1,9 +1,11 @@
 import { Injectable, type OnModuleInit } from '@nestjs/common';
 import { DiscoveryService, MetadataScanner } from '@nestjs/core';
 import { type InstanceWrapper } from '@nestjs/core/injector/instance-wrapper';
+import { CircuitBreakerBuilder } from '../builders/circuit-breaker.builder';
 import { type HttpRequestBuilder } from '../builders/http-request.builder';
 import { type ResponseBodyBuilder } from '../builders/response-body.builder';
 import {
+  CIRCUIT_BREAKER_METADATA,
   HTTP_EXCHANGE_METADATA,
   HTTP_INTERFACE_METADATA,
   RESPONSE_BODY_METADATA,
@@ -43,14 +45,25 @@ export class NodeFetchInjector implements OnModuleInit {
         return;
       }
 
+      const circuitBreaker: CircuitBreakerBuilder =
+        Reflect.getMetadata(CIRCUIT_BREAKER_METADATA, prototype, methodName) ??
+        new CircuitBreakerBuilder(
+          this.httpInterfaceConfig?.circuitBreakerOption,
+        );
       const responseBodyBuilder: ResponseBodyBuilder<unknown> | undefined =
         Reflect.getMetadata(RESPONSE_BODY_METADATA, prototype, methodName);
 
       httpRequestBuilder.setBaseUrl(baseUrl);
 
       wrapper.instance[methodName] = async (...args: never[]) =>
-        await this.httpClient
-          .request(httpRequestBuilder.build(args), httpRequestBuilder.options)
+        await circuitBreaker
+          .build(
+            async () =>
+              await this.httpClient.request(
+                httpRequestBuilder.build(args),
+                httpRequestBuilder.options,
+              ),
+          )
           .then(async (response) => {
             if (responseBodyBuilder != null) {
               const res = await response.json();
