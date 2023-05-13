@@ -1,5 +1,10 @@
 lockfileVersion: '6.0'
 
+dependencies:
+  opossum:
+    specifier: ^7.1.0
+    version: 7.1.0
+
 devDependencies:
   '@nestjs/common':
     specifier: ^9.4.0
@@ -13,6 +18,9 @@ devDependencies:
   '@nestjs/testing':
     specifier: ^9.4.0
     version: 9.4.0(@nestjs/common@9.4.0)(@nestjs/core@9.4.0)(@nestjs/platform-express@9.4.0)
+  '@types/opossum':
+    specifier: ^6.2.3
+    version: 6.2.3
   '@vitest/coverage-c8':
     specifier: ^0.30.1
     version: 0.30.1(vitest@0.30.1)
@@ -840,6 +848,12 @@ packages:
 
   /@types/node@18.15.11:
     resolution: {integrity: sha512-E5Kwq2n4SbMzQOn6wnmBjuK9ouqlURrcZDVfbo9ftDDTFt3nk7ZKK4GMOzoYgnpQJKcxwQw+lGaBvvlMo0qN/Q==}
+    dev: true
+
+  /@types/opossum@6.2.3:
+    resolution: {integrity: sha512-KcbU4O7GydLbRLZbKRdFikNHHAsQESYIPlA6HEm+CCaZfEk+/NTGlvY8g5t8pg/ks3U80oEf8a21lUAjW311Og==}
+    dependencies:
+      '@types/node': 18.15.11
     dev: true
 
   /@types/semver@7.3.13:
@@ -4092,6 +4106,11 @@ packages:
       is-inside-container: 1.0.0
       is-wsl: 2.2.0
     dev: true
+
+  /opossum@7.1.0:
+    resolution: {integrity: sha512-u3KZa2JTVsewFILe2NIebLMii/zzszTTBxRnM9USxVNcq2R2me40uP38/B39GueeOABXgWGtClPZPg4NAwHU4g==}
+    engines: {node: ^19 || ^18 || ^16 || ^14}
+    dev: false
 
   /optionator@0.8.3:
     resolution: {integrity: sha512-+IW9pACdk3XWmmTXG8m3upGUJst5XRGzxMRjXzAuJ1XnIFNvfhjjIuYkDvysnPQ7qzqVzLt78BCruntqRhWQbA==}
