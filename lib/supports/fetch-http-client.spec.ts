@@ -107,7 +107,9 @@ describe('FetchHttpClient', () => {
       await httpClient.request(request);
 
     // then
-    await expect(doRequest).rejects.toThrowError('Request Timeout: 3000ms');
+    await expect(doRequest).rejects.toThrowErrorMatchingInlineSnapshot(
+      '"The operation was aborted due to timeout"',
+    );
   });
 
   test('should use given option if provided', async () => {
@@ -122,6 +124,8 @@ describe('FetchHttpClient', () => {
       await httpClient.request(request, httpClientOptions);
 
     // then
-    await expect(doRequest).rejects.toThrowError('Request Timeout: 1000ms');
+    await expect(doRequest).rejects.toThrowErrorMatchingInlineSnapshot(
+      '"The operation was aborted due to timeout"',
+    );
   });
 });
