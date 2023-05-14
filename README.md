@@ -116,6 +116,7 @@ class UserService {
 
 - `@CircuitBreaker(options?: CircuitBreaker.Options)`: Marks the method as a circuit breaker, with `options` being the
   options of the circuit breaker. You can use global options by setting the `circuitBreakerOption` property in the module.
+  `options` is from [opossum](https://www.npmjs.com/package/opossum) library.
 
 ## Auto generate `@ResponseBody()` from return type of exchange method
 
