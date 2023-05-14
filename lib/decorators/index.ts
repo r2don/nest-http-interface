@@ -7,5 +7,6 @@ export * from './request-form.decorator';
 export * from './request-header.decorator';
 export * from './request-param.decorator';
 export * from './response-body.decorator';
+export * from './circuit-breaker.decorator';
 export * from './constants';
 export * from './utils';
