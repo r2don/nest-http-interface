@@ -4,9 +4,9 @@ import { GetExchange, HttpInterface } from './decorators';
 import { StubHttpClient } from './fixtures/stub-http-client';
 import { HttpInterfaceModule } from './http-interface.module';
 import { imitation } from './supports';
+import { type Configuration } from './supports/configuration';
 import { FetchHttpClient } from './supports/fetch-http-client';
 import { NodeFetchInjector } from './supports/node-fetch.injector';
-import { type HttpClient } from './types';
 
 describe('HttpInterfaceModule', () => {
   @HttpInterface('http://localhost:3000')
@@ -26,10 +26,12 @@ describe('HttpInterfaceModule', () => {
     const app = module.createNestApplication();
 
     // when
-    const injector = app.get<{ httpClient: HttpClient }>(NodeFetchInjector);
+    const injector = app.get<{ configuration: Configuration }>(
+      NodeFetchInjector,
+    );
 
     // then
-    expect(injector.httpClient).toBeInstanceOf(FetchHttpClient);
+    expect(injector.configuration.httpClient).toBeInstanceOf(FetchHttpClient);
   });
 
   test('should request with given client', async () => {
