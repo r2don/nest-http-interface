@@ -1,5 +1,6 @@
 import { MetadataScanner } from '@nestjs/core';
 import { beforeEach, describe, test, expect } from 'vitest';
+import { Configuration } from './configuration';
 import { imitation } from './imitation';
 import { NodeFetchInjector } from './node-fetch.injector';
 import {
@@ -30,7 +31,7 @@ describe('NodeFetchInjector', () => {
   const nodeFetchInjector = new NodeFetchInjector(
     metadataScanner,
     discoveryService,
-    httpClient,
+    new Configuration({ httpClient }),
   );
 
   beforeEach(() => {
@@ -525,8 +526,10 @@ describe('NodeFetchInjector', () => {
     const nodeFetchInjector = new NodeFetchInjector(
       metadataScanner,
       discoveryService,
-      httpClient,
-      { transformOption: { strategy: 'excludeAll' } },
+      new Configuration({
+        httpClient,
+        transformOption: { strategy: 'excludeAll' },
+      }),
     );
     class ResponseTest {
       constructor(readonly status: string) {}

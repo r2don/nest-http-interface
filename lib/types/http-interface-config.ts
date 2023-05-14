@@ -6,5 +6,5 @@ export interface HttpInterfaceConfig {
   timeout?: number;
   httpClient?: HttpClient;
   transformOption?: ClassTransformOptions;
-  circuitBreakerOption?: CircuitBreaker.Options;
+  circuitBreakerOption?: Omit<CircuitBreaker.Options, 'timeout'>;
 }

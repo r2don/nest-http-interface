@@ -1,6 +1,7 @@
 import { Injectable, type OnModuleInit } from '@nestjs/common';
 import { DiscoveryService, MetadataScanner } from '@nestjs/core';
 import { type InstanceWrapper } from '@nestjs/core/injector/instance-wrapper';
+import { Configuration } from './configuration';
 import { CircuitBreakerBuilder } from '../builders/circuit-breaker.builder';
 import { type HttpRequestBuilder } from '../builders/http-request.builder';
 import { type ResponseBodyBuilder } from '../builders/response-body.builder';
@@ -10,15 +11,13 @@ import {
   HTTP_INTERFACE_METADATA,
   RESPONSE_BODY_METADATA,
 } from '../decorators';
-import { HttpClient, HttpInterfaceConfig } from '../types';
 
 @Injectable()
 export class NodeFetchInjector implements OnModuleInit {
   constructor(
     private readonly metadataScanner: MetadataScanner,
     private readonly discoveryService: DiscoveryService,
-    private readonly httpClient: HttpClient,
-    private readonly httpInterfaceConfig?: HttpInterfaceConfig,
+    private readonly configuration: Configuration,
   ) {}
 
   onModuleInit(): void {
@@ -47,9 +46,7 @@ export class NodeFetchInjector implements OnModuleInit {
 
       const circuitBreaker: CircuitBreakerBuilder =
         Reflect.getMetadata(CIRCUIT_BREAKER_METADATA, prototype, methodName) ??
-        new CircuitBreakerBuilder(
-          this.httpInterfaceConfig?.circuitBreakerOption,
-        );
+        new CircuitBreakerBuilder(this.configuration.circuitBreakerOption);
       const responseBodyBuilder: ResponseBodyBuilder<unknown> | undefined =
         Reflect.getMetadata(RESPONSE_BODY_METADATA, prototype, methodName);
 
@@ -57,7 +54,7 @@ export class NodeFetchInjector implements OnModuleInit {
 
       wrapper.instance[methodName] = circuitBreaker.build(
         async (...args: never[]) =>
-          await this.httpClient
+          await this.configuration.httpClient
             .request(httpRequestBuilder.build(args), httpRequestBuilder.options)
             .then(async (response) => {
               if (responseBodyBuilder != null) {
@@ -65,7 +62,7 @@ export class NodeFetchInjector implements OnModuleInit {
 
                 return responseBodyBuilder.build(
                   res,
-                  this.httpInterfaceConfig?.transformOption,
+                  this.configuration.transformOption,
                 );
               }
 
