@@ -1,13 +1,19 @@
 import CircuitBreaker from 'opossum';
 
 export class CircuitBreakerBuilder {
-  constructor(private readonly options?: CircuitBreaker.Options) {}
+  constructor(readonly options?: CircuitBreaker.Options) {}
 
-  async build(executor: () => Promise<Response>): Promise<Response> {
+  build(
+    executor: (...args: never[]) => Promise<any>,
+  ): (...args: never[]) => Promise<any> {
     if (this.options == null) {
-      return await executor();
+      return executor;
     }
 
-    return await new CircuitBreaker(executor, this.options).fire();
+    const circuitBreaker = new CircuitBreaker(executor, this.options);
+
+    return async (...args) => {
+      return await circuitBreaker.fire(...args);
+    };
   }
 }

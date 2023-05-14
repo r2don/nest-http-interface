@@ -55,27 +55,23 @@ export class NodeFetchInjector implements OnModuleInit {
 
       httpRequestBuilder.setBaseUrl(baseUrl);
 
-      wrapper.instance[methodName] = async (...args: never[]) =>
-        await circuitBreaker
-          .build(
-            async () =>
-              await this.httpClient.request(
-                httpRequestBuilder.build(args),
-                httpRequestBuilder.options,
-              ),
-          )
-          .then(async (response) => {
-            if (responseBodyBuilder != null) {
-              const res = await response.json();
+      wrapper.instance[methodName] = circuitBreaker.build(
+        async (...args: never[]) =>
+          await this.httpClient
+            .request(httpRequestBuilder.build(args), httpRequestBuilder.options)
+            .then(async (response) => {
+              if (responseBodyBuilder != null) {
+                const res = await response.json();
 
-              return responseBodyBuilder.build(
-                res,
-                this.httpInterfaceConfig?.transformOption,
-              );
-            }
+                return responseBodyBuilder.build(
+                  res,
+                  this.httpInterfaceConfig?.transformOption,
+                );
+              }
 
-            return await response.text();
-          });
+              return await response.text();
+            }),
+      );
     });
   }
 
