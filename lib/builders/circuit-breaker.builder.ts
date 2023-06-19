@@ -4,8 +4,8 @@ export class CircuitBreakerBuilder {
   constructor(readonly options?: CircuitBreaker.Options) {}
 
   build(
-    executor: (...args: never[]) => Promise<any>,
-  ): (...args: never[]) => Promise<any> {
+    executor: (...args: any[]) => Promise<any>,
+  ): (...args: any[]) => Promise<any> {
     if (this.options == null) {
       return executor;
     }

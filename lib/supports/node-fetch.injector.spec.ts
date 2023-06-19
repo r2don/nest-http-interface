@@ -1,4 +1,5 @@
 import { MetadataScanner } from '@nestjs/core';
+import { firstValueFrom, Observable } from 'rxjs';
 import { beforeEach, describe, test, expect } from 'vitest';
 import { Configuration } from './configuration';
 import { imitation } from './imitation';
@@ -19,6 +20,7 @@ import {
   RequestParam,
   GraphQLExchange,
   ResponseBody,
+  ObservableResponse,
 } from '../decorators';
 import { StubDiscoveryService } from '../fixtures/stub-discovery.service';
 import { StubHttpClient } from '../fixtures/stub-http-client';
@@ -97,7 +99,7 @@ describe('NodeFetchInjector', () => {
     expect(httpClient.requestInfo[0].url).toBe('https://example.com/api');
   });
 
-  test('should request to path parm replaced url', async () => {
+  test('should request to path replaced url', async () => {
     // given
     @HttpInterface('https://example.com')
     class SampleClient {
@@ -119,7 +121,7 @@ describe('NodeFetchInjector', () => {
     );
   });
 
-  test('should request to multiple path parm replaced url', async () => {
+  test('should request to multiple path replaced url', async () => {
     // given
     @HttpInterface('https://example.com')
     class SampleClient {
@@ -552,5 +554,51 @@ describe('NodeFetchInjector', () => {
     // then
     expect(response).toBeInstanceOf(ResponseTest);
     expect(response.status).toBeUndefined();
+  });
+
+  test('should response observable text if there is no response body decorator', async () => {
+    // given
+    @HttpInterface()
+    class SampleClient {
+      @GetExchange('https://example.com/api')
+      @ObservableResponse()
+      request(): Observable<string> {
+        return imitation();
+      }
+    }
+    const instance = discoveryService.addProvider(SampleClient);
+    httpClient.addResponse({ status: 'ok' });
+    nodeFetchInjector.onModuleInit();
+
+    // when
+    const result = instance.request();
+
+    // then
+    expect(await firstValueFrom(result)).toBe('{"status":"ok"}');
+  });
+
+  test('should response observable instance provided with response body decorator', async () => {
+    // given
+    class ResponseTest {
+      constructor(readonly value: string) {}
+    }
+    @HttpInterface()
+    class SampleClient {
+      @GetExchange('https://example.com/api')
+      @ObservableResponse()
+      @ResponseBody(ResponseTest)
+      request(): Observable<ResponseTest> {
+        return imitation();
+      }
+    }
+    const instance = discoveryService.addProvider(SampleClient);
+    httpClient.addResponse({ value: 'ok' });
+    nodeFetchInjector.onModuleInit();
+
+    // when
+    const result = instance.request();
+
+    // then
+    expect(await firstValueFrom(result)).toBeInstanceOf(ResponseTest);
   });
 });

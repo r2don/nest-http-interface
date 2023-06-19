@@ -1,6 +1,7 @@
 import { Injectable, type OnModuleInit } from '@nestjs/common';
 import { DiscoveryService, MetadataScanner } from '@nestjs/core';
 import { type InstanceWrapper } from '@nestjs/core/injector/instance-wrapper';
+import { from } from 'rxjs';
 import { Configuration } from './configuration';
 import { CircuitBreakerBuilder } from '../builders/circuit-breaker.builder';
 import { type HttpRequestBuilder } from '../builders/http-request.builder';
@@ -9,6 +10,7 @@ import {
   CIRCUIT_BREAKER_METADATA,
   HTTP_EXCHANGE_METADATA,
   HTTP_INTERFACE_METADATA,
+  OBSERVABLE_METADATA,
   RESPONSE_BODY_METADATA,
 } from '../decorators';
 
@@ -49,27 +51,50 @@ export class NodeFetchInjector implements OnModuleInit {
         new CircuitBreakerBuilder(this.configuration.circuitBreakerOption);
       const responseBodyBuilder: ResponseBodyBuilder<unknown> | undefined =
         Reflect.getMetadata(RESPONSE_BODY_METADATA, prototype, methodName);
+      const isObservable: boolean = Reflect.hasMetadata(
+        OBSERVABLE_METADATA,
+        prototype,
+        methodName,
+      );
 
       httpRequestBuilder.setBaseUrl(baseUrl);
 
-      wrapper.instance[methodName] = circuitBreaker.build(
-        async (...args: never[]) =>
-          await this.configuration.httpClient
-            .request(httpRequestBuilder.build(args), httpRequestBuilder.options)
-            .then(async (response) => {
-              if (responseBodyBuilder != null) {
-                const res = await response.json();
+      wrapper.instance[methodName] = (...args: any[]) => {
+        const request = circuitBreaker.build(
+          async () =>
+            await this.asyncRequest(
+              responseBodyBuilder,
+              httpRequestBuilder,
+              ...args,
+            ),
+        );
 
-                return responseBodyBuilder.build(
-                  res,
-                  this.configuration.transformOption,
-                );
-              }
-
-              return await response.text();
-            }),
-      );
+        return isObservable
+          ? from(request(...args))
+          : (request(...args) as any);
+      };
     });
+  }
+
+  private async asyncRequest(
+    responseBodyBuilder: ResponseBodyBuilder<any> | undefined,
+    httpRequestBuilder: HttpRequestBuilder,
+    ...args: any[]
+  ): Promise<any> {
+    return await this.configuration.httpClient
+      .request(httpRequestBuilder.build(args), httpRequestBuilder.options)
+      .then(async (response) => {
+        if (responseBodyBuilder != null) {
+          const res = await response.json();
+
+          return responseBodyBuilder.build(
+            res,
+            this.configuration.transformOption,
+          );
+        }
+
+        return await response.text();
+      });
   }
 
   private getHttpProviders(): InstanceWrapper[] {
