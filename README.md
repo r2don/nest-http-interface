@@ -17,7 +17,7 @@ This library is inspired by the HTTP interface in Spring 6 and provides a simila
 - Provides a concise syntax for handling query parameters, path variables, request headers, request bodies, and forms.
 - Offers integration with [class-transformer](https://github.com/typestack/class-transformer) to facilitate data
   transformation.
-- Uses promises instead of observables
+- Support both promise and observable.
 - Circuit breaker support
 
 ## Requirements
@@ -117,6 +117,9 @@ class UserService {
 - `@CircuitBreaker(options?: CircuitBreaker.Options)`: Marks the method as a circuit breaker, with `options` being the
   options of the circuit breaker. You can use global options by setting the `circuitBreakerOption` property in the module.
   `options` is from [opossum](https://www.npmjs.com/package/opossum) library.
+
+- `@Observable()`: Marks the method as an observable method. If this decorator is not specified, the method will return
+  a promise.
 
 ## Auto generate `@ResponseBody()` from return type of exchange method
 
