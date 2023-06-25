@@ -22,7 +22,9 @@ This library is inspired by the HTTP interface in Spring 6 and provides a simila
 
 ## Requirements
 
-- Node.js 18 or later (because this library uses `fetch` internally)
+- Node.js 
+    - 18 or later if `HttpClient` is not specified (default: `fetch`)
+    - if custom `HttpClient` is provided, you can use lower version of Node.js
 - Nest.js 8 or later
 
 ## Installation
