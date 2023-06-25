@@ -25,7 +25,7 @@ class UserService {
 }`;
 
 export const notPromiseServiceCode = /* language=typescript */ `
-import { HttpInterface, GetExchange, ResponseBody } from '@r2don/nest-http-interface';
+import { HttpInterface, GetExchange } from '@r2don/nest-http-interface';
 
 @HttpInterface()
 class UserService {
