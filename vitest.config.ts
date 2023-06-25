@@ -5,7 +5,7 @@ export default defineConfig({
     testTimeout: 10000,
     setupFiles: './global.vitest.ts',
     coverage: {
-      provider: 'c8',
+      provider: 'v8',
       reporter: 'lcov',
     },
   },
