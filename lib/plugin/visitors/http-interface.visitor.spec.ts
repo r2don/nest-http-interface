@@ -69,7 +69,7 @@ describe('HttpInterfaceVisitor', () => {
     expect(result.outputText).toMatchSnapshot();
   });
 
-  test('should ignore if return type if not a promise ', () => {
+  test('should ignore if return type if not a promise or observable', () => {
     // given
     const filename = 'text.service.ts';
     const fakeProgram = ts.createProgram([filename], compilerOptions);

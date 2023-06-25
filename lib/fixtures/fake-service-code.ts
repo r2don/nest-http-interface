@@ -1,4 +1,4 @@
-export const returnStringServiceCode = `
+export const returnStringServiceCode = /* language=typescript */ `
 import { HttpInterface, GetExchange } from '@r2don/nest-http-interface';
 
 @HttpInterface()
@@ -11,7 +11,7 @@ class TextService {
   }
 }`;
 
-export const hasResponseBodyServiceCode = `
+export const hasResponseBodyServiceCode = /* language=typescript */ `
 import { HttpInterface, PostExchange, ResponseBody } from '@r2don/nest-http-interface';
 import { User } from './user.entity';
 
@@ -24,7 +24,7 @@ class UserService {
   }
 }`;
 
-export const notPromiseServiceCode = `
+export const notPromiseServiceCode = /* language=typescript */ `
 import { HttpInterface, GetExchange, ResponseBody } from '@r2don/nest-http-interface';
 
 @HttpInterface()
@@ -35,8 +35,9 @@ class UserService {
   }
 }`;
 
-export const needResponseBodyServiceCode = `
-import { HttpInterface, GraphQLExchange } from '@r2don/nest-http-interface';
+export const needResponseBodyServiceCode = /* language=typescript */ `
+import { HttpInterface, GraphQLExchange, ObservableResponse } from '@r2don/nest-http-interface';
+import { Observable } from "rxjs";
 
 class ResponseClass {}
 
@@ -46,9 +47,15 @@ class UserService {
   async getUser(): Promise<ResponseClass> {
     throw new Error('not implemented');
   }
+
+  @GraphQLExchange()
+  @ObservableResponse()
+  getUserObservable(): Observable<ResponseClass> {
+    throw new Error('not implemented');
+  }
 }`;
 
-export const arrayResponseBodyServiceCode = `
+export const arrayResponseBodyServiceCode = /* language=typescript */ `
 import { HttpInterface, GetExchange } from '@r2don/nest-http-interface';
 
 class ResponseClass {}

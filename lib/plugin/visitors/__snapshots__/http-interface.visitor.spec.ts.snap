@@ -46,10 +46,17 @@ let UserService = class UserService {
     async getUser() {
         throw new Error('not implemented');
     }
+    getUserObservable() {
+        throw new Error('not implemented');
+    }
 };
 __decorate([
     (0, nest_http_interface_1.GraphQLExchange)()
 ], UserService.prototype, \\"getUser\\", null);
+__decorate([
+    (0, nest_http_interface_1.GraphQLExchange)(),
+    (0, nest_http_interface_1.ObservableResponse)()
+], UserService.prototype, \\"getUserObservable\\", null);
 UserService = __decorate([
     (0, nest_http_interface_1.HttpInterface)()
 ], UserService);
@@ -76,7 +83,7 @@ UserService = __decorate([
 "
 `;
 
-exports[`HttpInterfaceVisitor > should ignore if return type if not a promise  1`] = `
+exports[`HttpInterfaceVisitor > should ignore if return type if not a promise or observable 1`] = `
 "\\"use strict\\";
 Object.defineProperty(exports, \\"__esModule\\", { value: true });
 const nest_http_interface_1 = require(\\"@r2don/nest-http-interface\\");
@@ -124,11 +131,19 @@ let UserService = class UserService {
     async getUser() {
         throw new Error('not implemented');
     }
+    getUserObservable() {
+        throw new Error('not implemented');
+    }
 };
 __decorate([
     (0, nest_http_interface_1.GraphQLExchange)(),
     r2don_http_module_1.ResponseBody(ResponseClass)
 ], UserService.prototype, \\"getUser\\", null);
+__decorate([
+    (0, nest_http_interface_1.GraphQLExchange)(),
+    (0, nest_http_interface_1.ObservableResponse)(),
+    r2don_http_module_1.ResponseBody(ResponseClass)
+], UserService.prototype, \\"getUserObservable\\", null);
 UserService = __decorate([
     (0, nest_http_interface_1.HttpInterface)()
 ], UserService);

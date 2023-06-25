@@ -180,7 +180,8 @@ export class HttpInterfaceVisitor {
       node.type == null ||
       !ts.isTypeReferenceNode(node.type) ||
       !ts.isIdentifier(node.type.typeName) ||
-      node.type.typeName.text !== 'Promise'
+      (node.type.typeName.text !== 'Promise' &&
+        node.type.typeName.text !== 'Observable')
     ) {
       return undefined;
     }

@@ -118,7 +118,7 @@ class UserService {
   options of the circuit breaker. You can use global options by setting the `circuitBreakerOption` property in the module.
   `options` is from [opossum](https://www.npmjs.com/package/opossum) library.
 
-- `@Observable()`: Marks the method as an observable method. If this decorator is not specified, the method will return
+- `@ObservableResponse()`: Marks the method as an observable method. If this decorator is not specified, the method will return
   a promise.
 
 ## Auto generate `@ResponseBody()` from return type of exchange method
