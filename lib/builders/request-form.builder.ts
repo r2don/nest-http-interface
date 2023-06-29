@@ -16,8 +16,8 @@ export class RequestFormBuilder {
     this.metadata.push([index, [key, defaultValue]]);
   }
 
-  build(args: any[]): FormData {
-    const form = new FormData();
+  build(args: any[]): URLSearchParams {
+    const form = new URLSearchParams();
 
     this.metadata.forEach(([index, [key, defaultValue]]) => {
       if (key != null) {

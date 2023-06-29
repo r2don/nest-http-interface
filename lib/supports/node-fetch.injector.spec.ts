@@ -311,11 +311,10 @@ describe('NodeFetchInjector', () => {
 
     // then
     expect(httpClient.requestInfo).toHaveLength(1);
-    expect(await httpClient.requestInfo[0].text()).toContain(
-      `Content-Disposition: form-data; name="foo"`,
-    );
+    const formData = await httpClient.requestInfo[0].formData();
+    expect(formData.get('foo')).toBe('bar');
     expect(httpClient.requestInfo[0].headers.get('Content-Type')).toBe(
-      'application/x-www-form-urlencoded',
+      'application/x-www-form-urlencoded;charset=UTF-8',
     );
   });
 

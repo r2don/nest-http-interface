@@ -13,10 +13,6 @@ export class PayloadBuilder {
       return { 'Content-Type': 'application/json' };
     }
 
-    if (this.requestFormBuilder != null) {
-      return { 'Content-Type': 'application/x-www-form-urlencoded' };
-    }
-
     return undefined;
   }
 
