@@ -3,6 +3,7 @@
 /coverage
 /.github
 /lib
+/example
 .eslintrc.yml
 .gitignore
 .npmignore
