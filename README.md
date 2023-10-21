@@ -33,6 +33,12 @@ This library is inspired by the HTTP interface in Spring 6 and provides a simila
 $ npm install @r2don/nest-http-interface
 ```
 
+If you have not installed `class-transformer`, you need to install it:
+
+```bash
+$ npm install class-transformer
+```
+
 ## Usage
 
 First, the module we created must be imported into `AppModule.ts`:
