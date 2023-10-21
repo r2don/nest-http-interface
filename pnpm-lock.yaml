@@ -9,8 +9,8 @@ overrides:
 
 dependencies:
   opossum:
-    specifier: ^8.0.1
-    version: 8.0.1
+    specifier: 8.1.2
+    version: 8.1.2
 
 devDependencies:
   '@nestjs/common':
@@ -4270,8 +4270,8 @@ packages:
       is-wsl: 2.2.0
     dev: true
 
-  /opossum@8.0.1:
-    resolution: {integrity: sha512-Y+UN75pzmbVjF6g7IHpeN77fLTFc7WeYr/aJtwNNCangdztmeSVYQscGrUbDY7GQFQPjO8TSyE2is3KVO6aT/Q==}
+  /opossum@8.1.2:
+    resolution: {integrity: sha512-JOugRBuGLED/LGhoMlRj2vz87xx2XgOHEfO8UfI8maL++MDgeYazis43stglJtrpUHh6RXlaJPZGukgO8pCgvg==}
     engines: {node: ^20 || ^18 || ^16}
     dev: false
 
