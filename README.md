@@ -172,6 +172,11 @@ Here is the list of options:
 
 `@ResponseBody()` will be added whenever `nest start` or `nest build` is executed.
 
+## Example
+
+There are some examples in the [example](./example) directory.
+Please refer to the [README.md](./example/README.md).
+
 ## License
 
 This library is licensed under the MIT license.
