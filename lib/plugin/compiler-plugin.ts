@@ -11,24 +11,24 @@ function isFilenameMatched(patterns: string[], filename: string): boolean {
 export const before: (
   options: Record<string, any> | undefined,
   program: ts.Program,
-) => (ctx: ts.TransformationContext) => ts.Transformer<any> = (
+) => ts.TransformerFactory<ts.SourceFile> | ts.CustomTransformerFactory = (
   options,
   program,
 ) => {
   const mergedOption = mergePluginOptions(options);
 
-  return (ctx: ts.TransformationContext): ts.Transformer<any> => {
-    return (sf: ts.SourceFile) => {
+  return (ctx) => {
+    return (sourceFile) => {
       if (
         isFilenameMatched(
           mergedOption.interfaceFilenameSuffix as string[],
-          sf.fileName,
+          sourceFile.fileName,
         )
       ) {
-        return httpInterfaceVisitor.visit(sf, ctx, program);
+        return httpInterfaceVisitor.visit(sourceFile, ctx, program);
       }
 
-      return sf;
+      return sourceFile;
     };
   };
 };

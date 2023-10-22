@@ -40,7 +40,7 @@ export class HttpInterfaceVisitor {
     sourceFile: ts.SourceFile,
     ctx: ts.TransformationContext,
     program: ts.Program,
-  ): ts.Node {
+  ): ts.SourceFile {
     this.importSet.clear();
     const factory = ctx.factory;
     const typeChecker = program.getTypeChecker();
@@ -61,7 +61,7 @@ export class HttpInterfaceVisitor {
       return ts.visitEachChild(node, visitNode, ctx);
     };
 
-    return ts.visitNode(sourceFile, visitNode);
+    return ts.visitNode(sourceFile, visitNode) as ts.SourceFile;
   }
 
   private updateSourceFile(
